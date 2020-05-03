@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'Menu.dart';
+import 'package:iria/Menu.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const routeName = '/profile';
@@ -12,7 +11,7 @@ class ProfileScreen extends StatelessWidget {
         title : Text("Mon profil")
       ),
       body: Text("Page profil utilisateur"),
-      drawer: Menu(),
+      drawer: Menu(admin: true),
     );
   }
 

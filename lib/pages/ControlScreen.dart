@@ -1,13 +1,10 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:iria/Menu.dart';
 import 'package:iria/objects/API.dart';
 
-import 'Menu.dart';
-
 class ControlScreen extends StatefulWidget {
-  static const routeName = 'control';
+  static const routeName = '/control';
   String jwt;
   API api;
 
@@ -25,7 +22,7 @@ class _ControlScreenState extends State<ControlScreen> {
         title : Text("Contrôle")
       ),
       body: Text("Page controle"),
-      drawer: Menu(),
+      drawer: Menu(admin: true),
     );
   }
 }
