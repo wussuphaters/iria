@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:iria/LoginScreen.dart';
-import 'API.dart';
+import 'package:iria/pages/LoginScreen.dart';
+import 'package:iria/objects/API.dart';
 
 class HomeScreen extends StatelessWidget {
   final api = API(addr: 'http://192.168.1.100/smart_home_api/api');
@@ -30,7 +30,8 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         children: [
           Text("${payload['data']['id']}"),
-          FlatButton(
+          FlatButton.icon(
+            label: Text("Déconnexion"),
             onPressed: (){
               storage.delete(key: "jwt");
               Navigator.pushReplacement(
@@ -40,9 +41,9 @@ class HomeScreen extends StatelessWidget {
                 )
               );
             },
-            child: Text("Déconnexion")
+            icon: Icon(Icons.delete)
           )
         ]
-      ),
+      )
     );
 }

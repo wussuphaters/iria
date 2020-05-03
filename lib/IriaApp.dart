@@ -1,18 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'LoginScreen.dart';
-import 'HomeScreen.dart';
+import 'package:iria/pages/ControlScreen.dart';
+import 'package:iria/pages/LoginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dart:convert';
+import 'package:iria/pages/ProfileScreen.dart';
+import 'Routes.dart';
+import 'objects/API.dart';
 
 class IriaApp extends StatelessWidget {
   final storage = FlutterSecureStorage();
-
-  Future<String> get jwtOrEmpty async {
-    var jwt = await storage.read(key: "jwt");
-    if(jwt == null) return "";
-    return jwt;
-  }
+  final api = API(addr: 'http://192.168.1.100/smart_home_api/api');
 
   @override
   Widget build(BuildContext context) {
@@ -21,27 +18,11 @@ class IriaApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: FutureBuilder(
-        future: jwtOrEmpty,            
-        builder: (context, snapshot) {
-          if(!snapshot.hasData) return CircularProgressIndicator();
-          if(snapshot.data != "") {           
-            var str = snapshot.data;
-            var jwt = str.split(".");
-
-            if(jwt.length !=3) {
-              return LoginScreen();
-            } else {
-              
-              var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
-
-              return HomeScreen(str, payload);
-            }
-          } else {
-            return LoginScreen();
-          }
-        }
-      ),
+      routes: {
+        Routes.profile : (context) => ProfileScreen(),
+        Routes.control : (context) => ControlScreen(api: api),
+        Routes.login : (context) => LoginScreen(api: api)
+      }
     );
   }
 }
