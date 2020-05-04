@@ -37,6 +37,6 @@ class Device    {
       if(status['state'] == "unlocked") status['state'] = "locked";
       else status['state'] = "unlocked";
       return {'id': id, 'state': status['state']};
-    }
+    } else return {};
   }
 }

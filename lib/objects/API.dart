@@ -49,7 +49,7 @@ class API {
   }
 
   void controlDevice(List payload) async  {
-    http.Response response = await http.post(
+    await http.post(
       '${this.addr}/device/control.php',
       body: jsonEncode(<String, dynamic>{
         'token' : jwt,
