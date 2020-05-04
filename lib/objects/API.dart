@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:iria/objects/User.dart';
 
 class API {
   String addr;
@@ -15,26 +16,25 @@ class API {
       })
     );
 
-    print("allo");
-    print(rep.body);
-
     if(rep.statusCode == 200) {
       return json.decode(rep.body)['token'];
     } else return null;
   }
 
-  /*var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
-
   Future<User> getUser(String jwt) async {
     http.Response rep = await http.post(
-      '${this.addr}/user/get_by_token.php',
+      '${this.addr}/user/get_profile.php',
       body: jsonEncode(<String, String>{
         'token' : jwt
       })
     );
 
+
     if(rep.statusCode == 200) {
-      return json.decode(rep.body)['token'];
+      var jsonUser = json.decode(rep.body)['user'];
+      User user = User(jsonUser);
+      user.jwt = jwt;
+      return user;
     } else return null;
-  }*/
+  }
 }

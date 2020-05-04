@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:iria/Menu.dart';
+import 'package:iria/objects/User.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   static const routeName = '/profile';
-  
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  User user;
+
   @override
   Widget build(BuildContext context) {
+    Map args = ModalRoute.of(context).settings.arguments;
+    if(args != null) user = args['user'];
+
     return Scaffold(
       appBar: AppBar(
         title : Text("Mon profil")
       ),
-      body: Text("Page profil utilisateur"),
-      drawer: Menu(admin: true),
+      body: Column(
+        children: <Widget>[
+          Text(user.firstName)
+        ]
+      ),
+      drawer: Menu(user: user),
     );
   }
-
 }

@@ -1,14 +1,24 @@
 class User  {
-  int id;
+  String id;
   String firstName;
   String lastName;
   String email;
   String phoneNumber;
-  DateTime birthDate;
+  String birthDate;
   bool isAdmin;
-  DateTime created;
-  DateTime expiration;
+  String created;
+  String expiration;
   String jwt;
 
-  User({this.id, this.firstName, this.lastName, this.email, this.phoneNumber, this.birthDate, this.isAdmin, this.created, this.expiration});
+  User(Map<String, dynamic> data) {
+    id=data['id'];
+    firstName = data['first_name'];
+    lastName = data['last_name'];
+    email = data['email'];
+    phoneNumber = data['phone_number'];
+    birthDate = data['birth_date'];
+    isAdmin = data['is_admin'] == '1' ? true : false;
+    created = data['created'];
+    expiration = data['expiration'];
+  }
 }

@@ -2,18 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:iria/Routes.dart';
+import 'package:iria/objects/User.dart';
 
 class Menu extends StatefulWidget  {
-  bool admin;
+  final User user;
 
-  Menu({this.admin});
+  Menu({this.user});
 
   @override
   _MenuState createState() => _MenuState();
 }
 
 class _MenuState extends State<Menu> {
-  @override
   Widget build(BuildContext context) {
     return Drawer(
         child: ListView(
@@ -22,22 +22,22 @@ class _MenuState extends State<Menu> {
           _createDrawerItem(
             icon: Icons.lightbulb_outline,
             text: 'Contrôle',
-            onTap: () => Navigator.pushReplacementNamed(context, Routes.control)
+            onTap: () => Navigator.pushReplacementNamed(context, Routes.control, arguments: {"user": widget.user})
           ),
-          widget.admin ? _createDrawerItem(
+          _createDrawerItem(
             icon: Icons.group,
             text: 'Utilisateurs',
-            onTap: () => Navigator.pushReplacementNamed(context, Routes.users)
-          ) : null,
-          widget.admin ? _createDrawerItem(
+            onTap: () => Navigator.pushReplacementNamed(context, Routes.users, arguments: {"user": widget.user})
+          ),
+          _createDrawerItem(
             icon: Icons.devices,
             text: 'Appareils',
-            onTap: () => Navigator.pushReplacementNamed(context, Routes.devices)
-          ) : null,
+            onTap: () => Navigator.pushReplacementNamed(context, Routes.devices, arguments: {"user": widget.user})
+          ),
           _createDrawerItem(
             icon: Icons.account_circle,
             text: 'Mon profil',
-            onTap: () => Navigator.pushReplacementNamed(context, Routes.profile)
+            onTap: () => Navigator.pushReplacementNamed(context, Routes.profile, arguments: {"user": widget.user})
           ),
           _createDrawerItem(
             icon: Icons.lock_outline,
@@ -46,6 +46,7 @@ class _MenuState extends State<Menu> {
           ),
         ],
       ),
+      
     );
   }
 

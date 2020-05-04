@@ -8,6 +8,6 @@ class Routes  {
   static const String login = LoginScreen.routeName;
   static const String profile = ProfileScreen.routeName;
   static const String control = ControlScreen.routeName;
-  static const String users = UserScreen.routeName;
+  static const String users = UsersScreen.routeName;
   static const String devices = DevicesScreen.routeName;
 }
