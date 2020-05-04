@@ -20,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final storage = FlutterSecureStorage();
+  bool loading = false;
 
   Future<User> fetchUserProfile() async {
     var jwt = await storage.read(key: "jwt");
@@ -41,7 +42,11 @@ class _LoginScreenState extends State<LoginScreen> {
       future: fetchUserProfile(),            
       builder: (context, AsyncSnapshot<User> snapshot) {
         if(!snapshot.hasData) {
-          return CircularProgressIndicator();
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator()
+            )
+          );
         } else  {
           User user = snapshot.data;
 
@@ -70,8 +75,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     )
                   ),
                   FlatButton(
-                    child: Text("Connexion"),
+                    child: loading ? CircularProgressIndicator() : Text("Connexion"),
                     onPressed: () async {
+                      setState(() {
+                        loading=true;
+                      });
                       var jwt = await widget.api.login(_usernameController.text, _passwordController.text);
                       if(jwt != null) {
                         storage.write(key: "jwt", value: jwt);
@@ -79,9 +87,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         if(user != null)  {
                           Navigator.pushReplacementNamed(context, Routes.control, arguments: {"user": user});
                         } else  {
+                          setState(() {
+                            loading=false;
+                          });
                           displayDialog(context, "Erreur", "Votre compte utilisateur a expiré");
                         }
                       } else {
+                        setState(() {
+                          loading=false;
+                        });
                         displayDialog(context, "Erreur", "L'adresse email et le mot de passe entrés ne sont pas valides");
                       }
                     }

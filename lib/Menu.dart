@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:iria/Routes.dart';
 import 'package:iria/objects/User.dart';
 
@@ -79,10 +78,7 @@ class _MenuState extends State<Menu> {
         ),
         FlatButton(
           child: Text("OUI"),
-          onPressed: (){
-            FlutterSecureStorage().delete(key: "jwt");
-            Navigator.pushNamedAndRemoveUntil(context, Routes.login, ModalRoute.withName(Routes.login));
-          }
+          onPressed: () => widget.user.logout(context)
         )
       ],
     );

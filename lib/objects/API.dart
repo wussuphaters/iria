@@ -28,13 +28,22 @@ class API {
         'token' : jwt
       })
     );
-
-
     if(rep.statusCode == 200) {
       var jsonUser = json.decode(rep.body)['user'];
       User user = User(jsonUser);
       user.jwt = jwt;
       return user;
     } else return null;
+  }
+
+  Future<Map> getLights(String jwt) async  {
+    http.Response response = await http.post(
+      '${this.addr}/light/get_all.php',
+      body: jsonEncode(<String, String>{
+        'token' : jwt
+      })
+    );
+
+    return jsonDecode(response.body);
   }
 }

@@ -1,3 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:iria/Routes.dart';
+
 class User  {
   String id;
   String firstName;
@@ -20,5 +24,10 @@ class User  {
     isAdmin = data['is_admin'] == '1' ? true : false;
     created = data['created'];
     expiration = data['expiration'];
+  }
+
+  void logout(BuildContext context) {
+    FlutterSecureStorage().delete(key: "jwt");
+    Navigator.pushNamedAndRemoveUntil(context, Routes.login, ModalRoute.withName(Routes.login));
   }
 }

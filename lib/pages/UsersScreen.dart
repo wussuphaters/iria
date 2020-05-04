@@ -21,8 +21,6 @@ class _UsersScreenState extends State<UsersScreen> {
   Widget build(BuildContext context) {
     Map args = ModalRoute.of(context).settings.arguments;
     if(args != null) user = args['user'];
-
-    print(user);
     
     return Scaffold(
       appBar: AppBar(
