@@ -29,7 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
       var jwtArray = jwt.split(".");
 
       if(jwtArray.length == 3)  {
-        User user = await widget.api.getUser(jwt);
+        widget.api.jwt = jwt;
+        User user = await widget.api.getUser();
         return user;
       }
       else return User({});
@@ -83,9 +84,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       var jwt = await widget.api.login(_usernameController.text, _passwordController.text);
                       if(jwt != null) {
                         storage.write(key: "jwt", value: jwt);
-                        User user = await widget.api.getUser(jwt);
+                        widget.api.jwt = jwt;
+                        User user = await widget.api.getUser();
                         if(user != null)  {
                           Navigator.pushReplacementNamed(context, Routes.control, arguments: {"user": user});
+                          setState(() {
+                            loading=false;
+                          });
                         } else  {
                           setState(() {
                             loading=false;

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:iria/LightCard.dart';
+import 'package:iria/DeviceCard.dart';
 import 'package:iria/Menu.dart';
 import 'package:iria/objects/API.dart';
 import 'package:iria/objects/User.dart';
@@ -25,11 +25,10 @@ class _ControlScreenState extends State<ControlScreen> {
     if(args != null) user = args['user'];
 
     return FutureBuilder(
-      future: widget.api.getLights(user.jwt),
+      future: widget.api.getDevices(),
       builder: (context, AsyncSnapshot<Map> snapshot)  {
         if(snapshot.hasData)  {
-          devices = snapshot.data['lights'];
-          print(devices);
+          devices = snapshot.data['devices'];
           if(devices == null) user.logout(context);
         }
         return Scaffold(
@@ -39,7 +38,7 @@ class _ControlScreenState extends State<ControlScreen> {
           body: snapshot.hasData ? ListView.builder(
             itemCount: devices.length,
             itemBuilder: (BuildContext context, int index)  {
-              return LightCard(device: devices[index]);
+              return DeviceCard(device: devices[index], api: widget.api);
             },
           ) : Center(
             child: CircularProgressIndicator()

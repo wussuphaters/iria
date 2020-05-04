@@ -4,6 +4,7 @@ import 'package:iria/objects/User.dart';
 
 class API {
   String addr;
+  String jwt;
 
   API({this.addr});
 
@@ -21,7 +22,7 @@ class API {
     } else return null;
   }
 
-  Future<User> getUser(String jwt) async {
+  Future<User> getUser() async {
     http.Response rep = await http.post(
       '${this.addr}/user/get_profile.php',
       body: jsonEncode(<String, String>{
@@ -36,14 +37,24 @@ class API {
     } else return null;
   }
 
-  Future<Map> getLights(String jwt) async  {
+  Future<Map> getDevices() async  {
     http.Response response = await http.post(
-      '${this.addr}/light/get_all.php',
+      '${this.addr}/device/get_all.php',
       body: jsonEncode(<String, String>{
         'token' : jwt
       })
     );
 
     return jsonDecode(response.body);
+  }
+
+  void controlDevice(List payload) async  {
+    http.Response response = await http.post(
+      '${this.addr}/device/control.php',
+      body: jsonEncode(<String, dynamic>{
+        'token' : jwt,
+        'devices' : payload
+      })
+    );
   }
 }
