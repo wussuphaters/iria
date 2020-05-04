@@ -34,8 +34,8 @@ class Device    {
       else status['power'] = "on";
       return {'id': id, 'power': status['power']};
     } else if(type == "lock") {
-      if(status['state'] == "unlocked") status['state'] = "locked";
-      else status['state'] = "unlocked";
+      if(status['state'] == "unlock") status['state'] = "lock";
+      else status['state'] = "unlock";
       return {'id': id, 'state': status['state']};
     } else return {};
   }
