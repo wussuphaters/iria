@@ -24,19 +24,19 @@ class _MenuState extends State<Menu> {
             text: 'Contrôle',
             onTap: () => Navigator.pushReplacementNamed(context, Routes.control, arguments: {"user": widget.user})
           ),
-          _createDrawerItem(
+          widget.user.isAdmin ? _createDrawerItem(
             icon: Icons.group,
             text: 'Utilisateurs',
             onTap: () => Navigator.pushReplacementNamed(context, Routes.users, arguments: {"user": widget.user})
-          ),
-          _createDrawerItem(
+          ) : Row(),
+          widget.user.isAdmin ? _createDrawerItem(
             icon: Icons.devices,
             text: 'Appareils',
             onTap: () => Navigator.pushReplacementNamed(context, Routes.devices, arguments: {"user": widget.user})
-          ),
+          ) : Row(),
           _createDrawerItem(
             icon: Icons.account_circle,
-            text: 'Mon profil',
+            text: 'Profil de ${widget.user.firstName}',
             onTap: () => Navigator.pushReplacementNamed(context, Routes.profile, arguments: {"user": widget.user})
           ),
           _createDrawerItem(
