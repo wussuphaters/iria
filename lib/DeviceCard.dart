@@ -19,7 +19,7 @@ class _DeviceCardState extends State<DeviceCard> {
   @override
   void initState() {
     super.initState();
-    device = Device(id: widget.device['id'], name: widget.device['name'], addr: widget.device['addr'], type: widget.device['type'], room: widget.device['room'], status: widget.device['status']);
+    device = Device(id: widget.device['id'], name: widget.device['name'], addr: widget.device['addr'], type: widget.device['type'], room: widget.device['room']);
   }
 
   @override
@@ -27,10 +27,20 @@ class _DeviceCardState extends State<DeviceCard> {
     return Card(
       child: Row(
         children: <Widget>[
-          IconButton(
-            icon: device.getIcon(),
-            color: device.getColor(),
-            onPressed: () => handleToggle()
+          FutureBuilder(
+            future: widget.api.getDeviceStatus(device.id),
+            builder: (context, AsyncSnapshot<Map> snapshot)  {
+              if(!snapshot.hasData) {
+                return CircularProgressIndicator();
+              }
+              device.status = snapshot.data;
+              return IconButton(
+                icon: device.getIcon(),
+                color: device.getColor(),
+                onPressed: () => handleToggle()
+              );
+            },
+
           ),
           Text(widget.device['name'])
         ],
@@ -39,8 +49,8 @@ class _DeviceCardState extends State<DeviceCard> {
   }
 
   void handleToggle()  {
+    widget.api.controlDevice([device.toggle()]);
     setState(() {
-      widget.api.controlDevice([device.toggle()]);
     });
   }
 }

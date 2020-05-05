@@ -12,31 +12,38 @@ class Device    {
 
   Widget getIcon()  {
     IconData iconData;
-    if(type == "light-xiaomi" || type == "light-philips") {
+    if(status.length == 0) iconData = Icons.warning;
+    else if(type == "light-xiaomi" || type == "light-philips") {
       iconData = Icons.lightbulb_outline;
     } else if(type == "lock") {
-      if(status['state'] == "unlocked") iconData = Icons.lock_open;
-      else iconData = Icons.lock;
+      if(status['state'] == "lock") iconData = Icons.lock;
+      else iconData = Icons.lock_open;
     }
 
     return Icon(iconData);
   }
 
   MaterialColor getColor()  {
-    if((type == "light-xiaomi" || type == "light-philips") && status['power'] == "on")  {
-      return Colors.amber;
-    } else return Colors.grey;
+    MaterialColor color;
+    if(status.length == 0) color = Colors.grey;
+    else if((type == "light-xiaomi" || type == "light-philips") && status['power'] == "on")  {
+      color = Colors.amber;
+    } else color = Colors.grey;
+
+    return color;
   }
 
   Map toggle() {
-    if(type == "light-xiaomi" || type == "light-philips") {
-      if(status['power'] == "on") status['power'] = "off";
-      else status['power'] = "on";
-      return {'id': id, 'power': status['power']};
+    Map payload;
+    if(status.length == 0) payload = {};
+    else if(type == "light-xiaomi" || type == "light-philips") {
+      if(status['power'] == "on") payload = {'id': id, 'power': "off"};
+      else payload = {'id': id, 'power': "on"};
     } else if(type == "lock") {
-      if(status['state'] == "unlock") status['state'] = "lock";
-      else status['state'] = "unlock";
-      return {'id': id, 'state': status['state']};
-    } else return {};
+      if(status['state'] == "unlock") payload = {'id': id, 'state': "lock"};
+      else payload = {'id': id, 'state': "unlock"};
+    } else payload = {};
+
+    return payload;
   }
 }

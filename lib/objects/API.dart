@@ -57,4 +57,21 @@ class API {
       })
     );
   }
+
+  Future<Map> getDeviceStatus(String id) async{
+    http.Response rep = await http.post(
+      '${this.addr}/device/get_status.php',
+      body: jsonEncode(<String, dynamic>{
+        'token' : jwt,
+        'device' : {
+          'id': id
+        }
+      })
+    );
+    if(rep.statusCode == 200) {
+      Map status = json.decode(rep.body)['status'];
+      
+      return status;
+    } else return {};
+  }
 }
