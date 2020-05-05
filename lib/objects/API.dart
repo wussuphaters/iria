@@ -48,7 +48,7 @@ class API {
     return jsonDecode(response.body);
   }
 
-  void controlDevice(List payload) async  {
+  Future<void> controlDevice(List payload) async  {
     await http.post(
       '${this.addr}/device/control.php',
       body: jsonEncode(<String, dynamic>{
@@ -58,8 +58,8 @@ class API {
     );
   }
 
-  Future<Map> getDeviceStatus(String id) async{
-    http.Response rep = await http.post(
+  Future<Map> getDeviceStatus(String id) async  {
+    return http.post(
       '${this.addr}/device/get_status.php',
       body: jsonEncode(<String, dynamic>{
         'token' : jwt,
@@ -67,11 +67,16 @@ class API {
           'id': id
         }
       })
-    );
-    if(rep.statusCode == 200) {
-      Map status = json.decode(rep.body)['status'];
-      
-      return status;
-    } else return {};
+    ).then((response) {
+      if(response.statusCode == 200) {
+        Map status = json.decode(response.body)['status'];
+        if(status.containsKey('bright')) status['bright'] = double.parse(status['bright']);
+        else if(status.containsKey('color_mode')) status['color_mode'] = double.parse(status['color_mode']);
+        else if(status.containsKey('ct')) status['ct'] = double.parse(status['ct']);
+        else if(status.containsKey('rgb')) status['rgb'] = double.parse(status['rgb']);
+        
+        return status;
+      } else return (Map<String,dynamic>());
+    });
   }
 }

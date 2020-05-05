@@ -6,7 +6,7 @@ class Device    {
   String addr;
   String type;
   String room;
-  Map status;
+  Map<String, dynamic> status;
 
   Device({this.id, this.name, this.addr, this.type, this.room, this.status});
 
