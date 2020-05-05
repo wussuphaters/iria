@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:core';
 import 'package:http/http.dart' as http;
 import 'package:iria/objects/User.dart';
 
@@ -71,9 +72,11 @@ class API {
       if(response.statusCode == 200) {
         Map status = json.decode(response.body)['status'];
         if(status.containsKey('bright')) status['bright'] = double.parse(status['bright']);
-        else if(status.containsKey('color_mode')) status['color_mode'] = double.parse(status['color_mode']);
-        else if(status.containsKey('ct')) status['ct'] = double.parse(status['ct']);
-        else if(status.containsKey('rgb')) status['rgb'] = double.parse(status['rgb']);
+        if(status.containsKey('color_mode')) status['color_mode'] = double.parse(status['color_mode']);
+        if(status.containsKey('ct')) status['ct'] = double.parse(status['ct']);
+        if(status.containsKey('rgb')) {
+          status['rgb'] = int.parse(status['rgb']).toRadixString(16);
+        }
         
         return status;
       } else return (Map<String,dynamic>());
