@@ -92,7 +92,7 @@ class _DeviceCardState extends State<DeviceCard> {
               ),
               Text("Couleur"),
               RawMaterialButton(
-                onPressed: () => openColorPicker(),
+                onPressed: () => device.status['power'] == "on" ? openColorPicker() : null,
                 elevation: 2.0,
                 fillColor: device.status.containsKey('rgb') ? Color(int.parse(device.status['rgb'], radix: 16) + 0xFF000000) : Colors.blue,
                 padding: EdgeInsets.all(15.0),
