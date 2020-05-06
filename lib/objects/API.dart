@@ -105,4 +105,16 @@ class API {
       })
     );
   }
+
+  Future<void> deleteDevice(int id) async {
+    await http.post(
+      '${this.addr}/device/delete.php',
+      body: jsonEncode(<String, dynamic>{
+        'token' : jwt,
+        'device' : {
+          'id' : id
+        }
+      })
+    );
+  }
 }

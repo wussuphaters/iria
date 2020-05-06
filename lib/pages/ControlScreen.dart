@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:iria/DeviceCard.dart';
+import 'package:iria/DeviceControlCard.dart';
 import 'package:iria/Menu.dart';
 import 'package:iria/objects/API.dart';
 import 'package:iria/objects/User.dart';
@@ -38,7 +38,7 @@ class _ControlScreenState extends State<ControlScreen> {
           body: snapshot.hasData ? ListView.builder(
             itemCount: devices.length,
             itemBuilder: (BuildContext context, int index)  {
-              return DeviceCard(device: devices[index], api: widget.api, status: widget.api.getDeviceStatus(devices[index]['id']));
+              return DeviceControlCard(device: devices[index], api: widget.api, status: widget.api.getDeviceStatus(devices[index]['id']));
             },
           ) : Center(
             child: FutureBuilder(

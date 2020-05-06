@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iria/Routes.dart';
 import 'package:iria/objects/API.dart';
 import 'package:iria/objects/User.dart';
 
@@ -41,7 +42,7 @@ class _UserCardState extends State<UserCard> {
             Row(children: <Widget>[
               IconButton(
                 icon: Icon(Icons.mode_edit),
-                onPressed: (){},
+                onPressed: () => Navigator.pushNamed(context, Routes.updateUser),
               ),
               IconButton(
                 icon: Icon(Icons.delete),

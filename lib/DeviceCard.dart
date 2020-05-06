@@ -1,201 +1,85 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:iria/Routes.dart';
 import 'package:iria/objects/API.dart';
 import 'package:iria/objects/Device.dart';
 
 class DeviceCard extends StatefulWidget  {
   final Map device;
   final API api;
-  final Future<Map> status;
 
-  DeviceCard({this.device, this.api, this.status});
+  DeviceCard({this.device, this.api});
 
   @override
   _DeviceCardState createState() => _DeviceCardState();
 }
 
 class _DeviceCardState extends State<DeviceCard> {
-  Future<Map> status;
   Device device;
-  bool _loading = true;
 
   @override
   void initState() {
     setState(() {
-      device = Device(id: widget.device['id'], name: widget.device['name'], addr: widget.device['addr'], type: widget.device['type'], room: widget.device['room'], status: Map<String, dynamic>());
-      status = widget.status;
+      device = Device.fromJson(widget.device);
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: status,
-      builder: (context, AsyncSnapshot<Map> snapshot) {
-        if(snapshot.hasData)  {
-          device.status = snapshot.data;
-          _loading = false;
-        }
-
-        if(device.type == "light-xiaomi" || device.type == "light-philips")
-          return ExpansionTile(
-            title: Row(
-              children: <Widget>[
-                device.status.containsKey('power') ? IconButton(
-                icon: device.getIcon(),
-                color: device.getColor(),
-                onPressed: () => handleToggle()
-              ) : FutureBuilder(
-                future: Future.delayed(Duration(seconds: 2)),
-                builder: (context, s) => s.connectionState == ConnectionState.done
-                    ? IconButton(
-                      icon: device.getIcon(),
-                      color: device.getColor(),
-                      onPressed: () => handleToggle()
-                    )
-                    : 
-                    CircularProgressIndicator()
-              ),
-                Text(device.name)
-              ]
-            ),
-            children: <Widget>[
-              Text("Luminosité"),
-              Slider(
-                min: 1,
-                max: 100,
-                value: device.status.containsKey("bright") ? device.status['bright'] : 50,
-                divisions: 100,
-                onChanged: (device.status.containsKey('power') && device.status['power'] == "on" && !_loading) ? (value){
-                  device.status['bright'] = value;
-                  status = null;
-                  setState(() {
-                  });
-                } : null,
-                onChangeEnd: (value) => (device.status.containsKey('power') && device.status['power'] == "on" && !_loading) ? handleBrightnessChange(value) : null
-              ),
-              Text("Température"),
-              Slider(
-                min: 1700,
-                max: 6500,
-                value: device.status.containsKey("ct") ? device.status['ct'] : 3500,
-                divisions: 100,
-                onChanged: (device.status.containsKey('power') && device.status['power'] == "on" && !_loading) ? (value){
-                  device.status['ct'] = value;
-                  status = null;
-                  setState(() {
-                  });
-                } : null,
-                onChangeEnd: (value) => (device.status.containsKey('power') && device.status['power'] == "on" && !_loading) ? handleTemperatureChange(value) : null
-              ),
-              Text("Couleur"),
-              RawMaterialButton(
-                onPressed: () => device.status['power'] == "on" ? openColorPicker() : null,
-                elevation: 2.0,
-                fillColor: device.status.containsKey('rgb') ? Color(int.parse(device.status['rgb'], radix: 16) + 0xFF000000) : Colors.blue,
-                padding: EdgeInsets.all(15.0),
-                shape: CircleBorder(),
-              )              
-            ]
-          );
-        else return Row(
+    return device != null ? ExpansionTile(
+      title: Row(
+        children: <Widget>[
+          Text("${device.name}")
+        ]
+      ),
+      children: <Widget>[
+        Column(
           children: <Widget>[
-            device.status.containsKey('state') || device.status.containsKey('power') ? IconButton(
-                icon: device.getIcon(),
-                color: device.getColor(),
-                onPressed: () => handleToggle()
-              ) : FutureBuilder(
-                future: Future.delayed(Duration(seconds: 2)),
-                builder: (context, s) => s.connectionState == ConnectionState.done
-                    ? IconButton(
-                      icon: device.getIcon(),
-                      color: device.getColor(),
-                      onPressed: () => handleToggle()
-                    )
-                    : 
-                    CircularProgressIndicator()
+            Row(children: <Widget>[Icon(Icons.email), Text(device.addr)]),
+            Row(children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.mode_edit),
+                onPressed: () => Navigator.pushNamed(context, Routes.updateDevice, arguments: {'device': device}),
               ),
-            Text(device.name)
-          ]);
-      }
+              IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () => handleDelete(context)
+              )
+            ])
+          ],
+        )
+      ]
+    ) : SizedBox.shrink();
+  }
+
+  void handleDelete(BuildContext context)  {
+    AlertDialog deleteUserDialog = AlertDialog(
+      title: Text("Supprimer l'appareil"),
+      content: Text("Êtes vous sûr de vouloir supprimer ${device.name} ?"),
+      actions: <Widget>[
+        FlatButton(
+          child: Text("ANNULER"),
+          onPressed: (){
+            Navigator.pop(context);
+          }
+        ),
+        FlatButton(
+          child: Text("SUPPRIMER"),
+          onPressed: () {
+            widget.api.deleteDevice(int.parse(device.id));
+            setState(() {
+              device = null;
+            });
+            Navigator.pop(context);
+          }
+        )
+      ],
     );
-  }
 
-  void handleToggle() async {
-    setState(() {
-      _loading = true;
-    });
-    await widget.api.controlDevice([device.toggle()]);
-    status = widget.api.getDeviceStatus(device.id);
-    setState(() {
-      _loading = true;
-    });
-  }
-
-  void handleBrightnessChange(double value) async {
-    setState(() {
-      _loading = true;
-    });
-    device.status['bright'] = value;
-    await widget.api.controlDevice([{'id': device.id, 'brightness': value}]);
-    status = widget.api.getDeviceStatus(device.id);
-    setState(() {
-      _loading = true;
-    });
-  }
-
-  void handleTemperatureChange(double value) async  {
-    setState(() {
-      _loading = true;
-    });
-    device.status['ct'] = value;
-    await widget.api.controlDevice([{'id': device.id, 'ct': value}]);
-    status = widget.api.getDeviceStatus(device.id);
-    setState(() {
-      _loading = true;
-    });
-  }
-
-  void handleColorChange() async {
-    setState(() {
-      _loading = true;
-    });
-    await widget.api.controlDevice([{'id': device.id, 'color': device.status['rgb']}]);
-    status = widget.api.getDeviceStatus(device.id);
-    setState(() {
-      _loading = true;
-    });
-  }
-
-  void openColorPicker()  {
     showDialog(
       context: context,
-      builder: (_) {
-        return AlertDialog(
-          contentPadding: const EdgeInsets.all(6.0),
-          title: Text("Couleur"),
-          content: BlockPicker(
-            availableColors: [
-              Colors.red, Colors.green, Colors.blue, Colors.cyan,
-              Colors.indigo, Colors.pink[100], Colors.purple, Colors.lightGreen[300],
-            ],
-            pickerColor: Color(int.parse(device.status['rgb'], radix: 16) + 0xFF000000),
-            onColorChanged: (color) {
-              setState(() {
-                device.status['rgb'] = color.toString().substring(color.toString().length-8, color.toString().length-2);
-                handleColorChange();
-              });
-            }
-          ),
-          actions: [
-            FlatButton(
-              child: Text('FERMER'),
-              onPressed: Navigator.of(context).pop,
-            )
-          ],
-        );
+      builder: (BuildContext context) {
+        return deleteUserDialog;
       },
     );
   }

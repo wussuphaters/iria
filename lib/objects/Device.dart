@@ -10,6 +10,15 @@ class Device    {
 
   Device({this.id, this.name, this.addr, this.type, this.room, this.status});
 
+  Device.fromJson(Map<String, dynamic> data) {
+    print(data);
+    id = data['id'];
+    name = data['name'];
+    addr = data['addr'];
+    type = data['type'];
+    room = data['room'];
+  }
+
   Widget getIcon()  {
     IconData iconData;
     if(status.length == 0) iconData = Icons.warning;

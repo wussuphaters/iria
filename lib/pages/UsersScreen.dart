@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iria/Menu.dart';
+import 'package:iria/Routes.dart';
 import 'package:iria/UserCard.dart';
 import 'package:iria/objects/API.dart';
 import 'package:iria/objects/User.dart';
@@ -48,6 +49,10 @@ class _UsersScreenState extends State<UsersScreen> {
                     : 
                     CircularProgressIndicator()
             )
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () => Navigator.pushNamed(context, Routes.addUser)
           ),
           drawer: Menu(user: user),
         );
