@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:iria/Routes.dart';
 
 class User  {
-  String id;
+  int id;
   String firstName;
   String lastName;
   String email;
@@ -15,7 +15,7 @@ class User  {
   String jwt;
 
   User(Map<String, dynamic> data) {
-    id=data['id'];
+    id=int.parse(data['id']);
     firstName = data['first_name'];
     lastName = data['last_name'];
     email = data['email'];

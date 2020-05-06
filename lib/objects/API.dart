@@ -38,6 +38,17 @@ class API {
     } else return null;
   }
 
+  Future<Map> getUsers() async  {
+    http.Response response = await http.post(
+      '${this.addr}/user/get_all.php',
+      body: jsonEncode(<String, String>{
+        'token' : jwt
+      })
+    );
+
+    return jsonDecode(response.body);
+  }
+
   Future<Map> getDevices() async  {
     http.Response response = await http.post(
       '${this.addr}/device/get_all.php',
@@ -81,5 +92,17 @@ class API {
         return status;
       } else return (Map<String,dynamic>());
     });
+  }
+
+  Future<void> deleteUser(int id) async {
+    await http.post(
+      '${this.addr}/user/delete.php',
+      body: jsonEncode(<String, dynamic>{
+        'token' : jwt,
+        'user' : {
+          'id' : id
+        }
+      })
+    );
   }
 }
