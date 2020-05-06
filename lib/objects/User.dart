@@ -14,7 +14,9 @@ class User  {
   String expiration;
   String jwt;
 
-  User(Map<String, dynamic> data) {
+  User();
+
+  User.fromJson(Map<String, dynamic> data) {
     id=int.parse(data['id']);
     firstName = data['first_name'];
     lastName = data['last_name'];
