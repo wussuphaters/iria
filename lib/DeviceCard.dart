@@ -48,7 +48,7 @@ class _DeviceCardState extends State<DeviceCard> {
                 color: device.getColor(),
                 onPressed: () => handleToggle()
               ) : FutureBuilder(
-                future: Future.delayed(Duration(seconds: 5)),
+                future: Future.delayed(Duration(seconds: 2)),
                 builder: (context, s) => s.connectionState == ConnectionState.done
                     ? IconButton(
                       icon: device.getIcon(),
@@ -102,12 +102,12 @@ class _DeviceCardState extends State<DeviceCard> {
           );
         else return Row(
           children: <Widget>[
-            device.status.containsKey('state') ? IconButton(
+            device.status.containsKey('state') || device.status.containsKey('power') ? IconButton(
                 icon: device.getIcon(),
                 color: device.getColor(),
                 onPressed: () => handleToggle()
               ) : FutureBuilder(
-                future: Future.delayed(Duration(seconds: 5)),
+                future: Future.delayed(Duration(seconds: 2)),
                 builder: (context, s) => s.connectionState == ConnectionState.done
                     ? IconButton(
                       icon: device.getIcon(),
