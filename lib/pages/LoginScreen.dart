@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<User> fetchUserProfile() async {
     var jwt = await storage.read(key: "jwt");
-    if(jwt == null) return User({});
+    if(jwt == null) return User();
     else  {
       var jwtArray = jwt.split(".");
 
@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
         User user = await widget.api.getUser();
         return user;
       }
-      else return User({});
+      else return User();
     }
   }
 
@@ -50,7 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         } else  {
           User user = snapshot.data;
-
           if(user.id != null) {
             SchedulerBinding.instance.addPostFrameCallback((_)  {
               Navigator.pushReplacementNamed(context, Routes.control, arguments: {"user": user});
