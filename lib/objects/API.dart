@@ -32,7 +32,7 @@ class API {
     );
     if(rep.statusCode == 200) {
       var jsonUser = json.decode(rep.body)['user'];
-      User user = User(jsonUser);
+      User user = User.fromJson(jsonUser);
       user.jwt = jwt;
       return user;
     } else return null;
@@ -52,6 +52,17 @@ class API {
   Future<Map> getDevices() async  {
     http.Response response = await http.post(
       '${this.addr}/device/get_all.php',
+      body: jsonEncode(<String, String>{
+        'token' : jwt
+      })
+    );
+
+    return jsonDecode(response.body);
+  }
+
+  Future<Map> getRooms() async  {
+    http.Response response = await http.post(
+      '${this.addr}/room/get_all.php',
       body: jsonEncode(<String, String>{
         'token' : jwt
       })
@@ -112,6 +123,18 @@ class API {
       body: jsonEncode(<String, dynamic>{
         'token' : jwt,
         'device' : {
+          'id' : id
+        }
+      })
+    );
+  }
+
+  Future<void> deleteRoom(int id) async {
+    await http.post(
+      '${this.addr}/room/delete.php',
+      body: jsonEncode(<String, dynamic>{
+        'token' : jwt,
+        'room' : {
           'id' : id
         }
       })

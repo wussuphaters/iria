@@ -39,6 +39,11 @@ class _MenuState extends State<Menu> {
             onTap: () => Navigator.pushReplacementNamed(context, Routes.profile, arguments: {"user": widget.user})
           ),
           _createDrawerItem(
+            icon: Icons.home,
+            text: 'Pièces',
+            onTap: () => Navigator.pushReplacementNamed(context, Routes.rooms, arguments: {"user": widget.user})
+          ),
+          _createDrawerItem(
             icon: Icons.lock_outline,
             text: 'Déconnexion',
             onTap: () => showAlertDialog(context)

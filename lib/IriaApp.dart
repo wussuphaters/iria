@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:iria/pages/AddDeviceScreen.dart';
+import 'package:iria/pages/AddRoomScreen.dart';
 import 'package:iria/pages/AddUserScreen.dart';
 import 'package:iria/pages/ControlScreen.dart';
 import 'package:iria/pages/DevicesScreen.dart';
 import 'package:iria/pages/LoginScreen.dart';
+import 'package:iria/pages/RoomsScreen.dart';
 import 'package:iria/pages/UpdateDeviceScreen.dart';
 import 'package:iria/pages/UpdateUserScreen.dart';
 import 'package:iria/pages/UsersScreen.dart';
@@ -36,7 +38,9 @@ class _IriaAppState extends State<IriaApp> {
         Routes.addUser : (context) => AddUserScreen(api: api),
         Routes.addDevice : (context) => AddDeviceScreen(api: api),
         Routes.updateUser : (context) => UpdateUserScreen(api: api),
-        Routes.updateDevice : (context) =>UpdateDeviceScreen(api: api)
+        Routes.updateDevice : (context) => UpdateDeviceScreen(api: api),
+        Routes.rooms : (context) => RoomsScreen(api: api),
+        Routes.addRoom : (context) => AddRoomScreen(api: api)
       }
     );
   }
