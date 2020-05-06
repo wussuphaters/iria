@@ -4,7 +4,7 @@ import 'package:iria/objects/API.dart';
 import 'package:iria/objects/Device.dart';
 
 class AddDeviceScreen extends StatefulWidget {
-  static const routeName = '/addDevice';
+  static const routeName = '/devices/add';
   final API api;
 
   AddDeviceScreen({this.api});
@@ -14,7 +14,7 @@ class AddDeviceScreen extends StatefulWidget {
 }
 
 class _AddDeviceScreenState extends State<AddDeviceScreen> {
-  Device user;
+  Device device;
 
   @override
   Widget build(BuildContext context) {

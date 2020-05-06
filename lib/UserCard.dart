@@ -19,7 +19,7 @@ class _UserCardState extends State<UserCard> {
   @override
   void initState() {
     setState(() {
-      user = User(widget.user);
+      user = User.fromJson(widget.user);
     });
     super.initState();
   }
@@ -58,7 +58,7 @@ class _UserCardState extends State<UserCard> {
   void handleDelete(BuildContext context)  {
     AlertDialog deleteUserDialog = AlertDialog(
       title: Text("Supprimer l'utilisateur"),
-      content: Text("Êtes vous sûr de vouloir supprimer ${user.firstName} ?"),
+      content: Text("Êtes vous sûr de vouloir supprimer ${user.firstName} des utilisateurs ?"),
       actions: <Widget>[
         FlatButton(
           child: Text("ANNULER"),

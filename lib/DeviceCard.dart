@@ -55,7 +55,7 @@ class _DeviceCardState extends State<DeviceCard> {
   void handleDelete(BuildContext context)  {
     AlertDialog deleteUserDialog = AlertDialog(
       title: Text("Supprimer l'appareil"),
-      content: Text("Êtes vous sûr de vouloir supprimer ${device.name} ?"),
+      content: Text("Êtes vous sûr de vouloir supprimer l'appareil '${device.name}' ?"),
       actions: <Widget>[
         FlatButton(
           child: Text("ANNULER"),

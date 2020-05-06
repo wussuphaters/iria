@@ -4,7 +4,7 @@ import 'package:iria/objects/API.dart';
 import 'package:iria/objects/User.dart';
 
 class UpdateUserScreen extends StatefulWidget {
-  static const routeName = '/updateUser';
+  static const routeName = '/users/update';
   final API api;
 
   UpdateUserScreen({this.api});
