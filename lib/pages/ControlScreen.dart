@@ -41,7 +41,13 @@ class _ControlScreenState extends State<ControlScreen> {
               return DeviceCard(device: devices[index], api: widget.api, status: widget.api.getDeviceStatus(devices[index]['id']));
             },
           ) : Center(
-            child: CircularProgressIndicator()
+            child: FutureBuilder(
+                future: Future.delayed(Duration(seconds: 2)),
+                builder: (context, s) => s.connectionState == ConnectionState.done
+                    ? Text("Impossible de se connecter à l'API.")
+                    : 
+                    CircularProgressIndicator()
+              )
           ),
           drawer: Menu(user: user),
         );
