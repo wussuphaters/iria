@@ -6,6 +6,7 @@ import 'package:iria/objects/User.dart';
 class API {
   String addr;
   String jwt;
+  String lastErrorMsg;
 
   API({this.addr});
 
@@ -20,7 +21,10 @@ class API {
 
     if(rep.statusCode == 200) {
       return json.decode(rep.body)['token'];
-    } else return null;
+    } else  {
+      lastErrorMsg = json.decode(rep.body)['error'];
+      return null;
+    }
   }
 
   Future<User> getUser() async {
@@ -35,7 +39,10 @@ class API {
       User user = User.fromJson(jsonUser);
       user.jwt = jwt;
       return user;
-    } else return null;
+    } else {
+      lastErrorMsg = json.decode(rep.body)['error'];
+      return null;
+      }
   }
 
   Future<Map> getUsers() async  {
@@ -46,6 +53,7 @@ class API {
       })
     );
 
+    if(response.statusCode != 200) lastErrorMsg = json.decode(response.body)['error'];
     return jsonDecode(response.body);
   }
 
@@ -57,6 +65,7 @@ class API {
       })
     );
 
+    if(response.statusCode != 200) lastErrorMsg = json.decode(response.body)['error'];
     return jsonDecode(response.body);
   }
 
@@ -68,17 +77,20 @@ class API {
       })
     );
 
+    if(response.statusCode != 200) lastErrorMsg = json.decode(response.body)['error'];
     return jsonDecode(response.body);
   }
 
   Future<void> controlDevice(List payload) async  {
-    await http.post(
+    http.Response response = await http.post(
       '${this.addr}/device/control.php',
       body: jsonEncode(<String, dynamic>{
         'token' : jwt,
         'devices' : payload
       })
     );
+
+    if(response.statusCode != 200) lastErrorMsg = json.decode(response.body)['error'];
   }
 
   Future<Map> getDeviceStatus(String id) async  {
@@ -101,12 +113,15 @@ class API {
         }
         
         return status;
-      } else return (Map<String,dynamic>());
+      } else  {
+        lastErrorMsg = json.decode(response.body)['error'];
+        return (Map<String,dynamic>());
+      }
     });
   }
 
   Future<void> deleteUser(int id) async {
-    await http.post(
+    http.Response response = await http.post(
       '${this.addr}/user/delete.php',
       body: jsonEncode(<String, dynamic>{
         'token' : jwt,
@@ -115,10 +130,12 @@ class API {
         }
       })
     );
+
+    if(response.statusCode != 200) lastErrorMsg = json.decode(response.body)['error'];
   }
 
   Future<void> deleteDevice(int id) async {
-    await http.post(
+    http.Response response = await http.post(
       '${this.addr}/device/delete.php',
       body: jsonEncode(<String, dynamic>{
         'token' : jwt,
@@ -127,10 +144,12 @@ class API {
         }
       })
     );
+
+    if(response.statusCode != 200) lastErrorMsg = json.decode(response.body)['error'];
   }
 
   Future<void> deleteRoom(int id) async {
-    await http.post(
+     http.Response response = await http.post(
       '${this.addr}/room/delete.php',
       body: jsonEncode(<String, dynamic>{
         'token' : jwt,
@@ -139,5 +158,36 @@ class API {
         }
       })
     );
+
+    if(response.statusCode != 200) lastErrorMsg = json.decode(response.body)['error'];
+  }
+
+  Future<bool> addUser(Map user) async {
+    Map<String, dynamic> requestBody = {
+      'token' : jwt,
+      'user' : {
+        'first_name' : user['first_name'],
+        'last_name' : user['last_name'],
+        'email' : user['email'],
+        'password' : user['password'],
+        'pin' : user['pin'],
+        'phone_number' : user['phone_number'],
+        'birth_date' : user['birth_date'],
+        'is_admin' : user['is_admin']
+      }
+    };
+
+    if(user['expiration'] != null) requestBody['expiration'] = user['expiration'];
+
+    http.Response rep = await http.post(
+      '${this.addr}/user/add.php',
+      body: jsonEncode(requestBody)
+    );
+
+    if(rep.statusCode == 200) return true;
+    else  {
+      lastErrorMsg = jsonDecode(rep.body)['error'];
+      return false;
+    }
   }
 }
