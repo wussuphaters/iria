@@ -59,6 +59,7 @@ class _UserFormState extends State<UserForm> {
               decoration: InputDecoration(
                 labelText: "Prénom"
               ),
+              inputFormatters: [LengthLimitingTextInputFormatter(25)],
               validator: (value)  {
                 return value.isEmpty ? "Entrez un prénom" : null;
               }
@@ -68,6 +69,7 @@ class _UserFormState extends State<UserForm> {
               decoration: InputDecoration(
                 labelText: "Nom"
               ),
+              inputFormatters: [LengthLimitingTextInputFormatter(25)],
               validator: (value)  {
                 return value.isEmpty ? "Entrez un nom" : null;
               }
@@ -77,6 +79,7 @@ class _UserFormState extends State<UserForm> {
               decoration: InputDecoration(
                 labelText: "Adresse email"
               ),
+              inputFormatters: [LengthLimitingTextInputFormatter(50)],
               validator: (value)  {
                 return value.isEmpty ? "Entrez une adresse email" : null;
               }
@@ -87,8 +90,11 @@ class _UserFormState extends State<UserForm> {
               decoration: InputDecoration(
                 labelText: "Numéro de téléphone"
               ),
+              inputFormatters: [LengthLimitingTextInputFormatter(10)],
               validator: (value)  {
-                return value.isEmpty ? "Entrez un numéro de téléphone" : null;
+                if(value.isEmpty) return "Entrez un numéro de téléphone";
+                else if(value.length < 10) return "Le numéro de téléphone n'est pas valide";
+                else return null;
               }
             ),
             DateTimeField(
@@ -124,7 +130,10 @@ class _UserFormState extends State<UserForm> {
                 labelText: "Mot de passe"
               ),
               validator: (value)  {
-                return value.isEmpty ? "Entrez un mot de passe" : null;
+                if(value.isEmpty) return "Entrez un mot de passe";
+                else if(value.length < 8) return "Le mot de passe doit faire au moins 8 caractères";
+                else if(!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$').hasMatch(value)) return "Minimum une min, une maj, un chiffre et un caractère spécial)";
+                else return null;
               }
             ),
             TextFormField(
@@ -133,9 +142,11 @@ class _UserFormState extends State<UserForm> {
                 labelText: "Code PIN"
               ),
               validator: (value)  {
-                return value.isEmpty ? "Entrez un code PIN" : null;
+                if(value.isEmpty) return "Entrez un code PIN";
+                else if(value.length < 8) return "Le code PIN doit faire 8 caractères";
+                else return null;
               },
-              inputFormatters: [WhitelistingTextInputFormatter(RegExp('[0-9A-D]'))]
+              inputFormatters: [WhitelistingTextInputFormatter(RegExp('[0-9A-D]')), LengthLimitingTextInputFormatter(8)]
             ),
             Row(children: <Widget>[
               Text("Administrateur"),
@@ -199,7 +210,7 @@ class _UserFormState extends State<UserForm> {
                   setState(() {
                     loading = true;
                   });
-                  bool rep =await widget.api.addUser({'first_name': _firstNameController.text, 'last_name': _lastNameController.text, 'email': _emailController.text, 'password': _passwordController.text, 'pin': _pinController.text, 'phone_number': _phoneNumberController.text, 'birth_date': birthDate.toString(), 'expiration': expirationDate.toString(), 'is_admin': admin});
+                  bool rep = await widget.api.addUser({'first_name': _firstNameController.text, 'last_name': _lastNameController.text, 'email': _emailController.text, 'password': _passwordController.text, 'pin': _pinController.text, 'phone_number': _phoneNumberController.text, 'birth_date': birthDate.toString(), 'expiration': expirationDate.toString(), 'is_admin': admin});
                   if(rep) {
                     Fluttertoast.showToast(
                       msg: "Utilisateur ajouté avec succès"
