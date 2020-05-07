@@ -52,7 +52,9 @@ class _UsersScreenState extends State<UsersScreen> {
           ),
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
-            onPressed: () => Navigator.pushNamed(context, Routes.addUser)
+            onPressed: () => Navigator.pushNamed(context, Routes.addUser).then((value) {
+              setState(() {});
+            })
           ),
           drawer: Menu(user: user),
         );
