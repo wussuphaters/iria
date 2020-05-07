@@ -31,6 +31,7 @@ class _UserFormState extends State<UserForm> {
   final formKey = GlobalKey<FormState>();
   DateTime expirationDate;
   DateTime birthDate;
+  String gender;
 
   @override
   void initState() {
@@ -44,6 +45,7 @@ class _UserFormState extends State<UserForm> {
     _phoneNumberController = new TextEditingController(text: user != null ? user.phoneNumber : "");
     _passwordController = new TextEditingController();
     _pinController = new TextEditingController();
+    gender = 'Homme';
     super.initState();
   }
 
@@ -73,6 +75,16 @@ class _UserFormState extends State<UserForm> {
               validator: (value)  {
                 return value.isEmpty ? "Entrez un nom" : null;
               }
+            ),
+            DropdownButton(
+              value: gender,
+              items: <String>['Homme', 'Femme'].map((String value)  {
+                return new DropdownMenuItem<String>(
+                  value: value,
+                  child: new Text(value),
+                );
+              }).toList(),
+              onChanged: (value) => setState(() => gender = value)
             ),
             TextFormField(
               controller: _emailController,
@@ -132,7 +144,7 @@ class _UserFormState extends State<UserForm> {
               validator: (value)  {
                 if(value.isEmpty) return "Entrez un mot de passe";
                 else if(value.length < 8) return "Le mot de passe doit faire au moins 8 caractères";
-                else if(!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$').hasMatch(value)) return "Minimum une min, une maj, un chiffre et un caractère spécial)";
+                else if(!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$').hasMatch(value)) return "Minimum une minuscule, une majuscule et un chiffre";
                 else return null;
               }
             ),
@@ -210,7 +222,7 @@ class _UserFormState extends State<UserForm> {
                   setState(() {
                     loading = true;
                   });
-                  bool rep = await widget.api.addUser({'first_name': _firstNameController.text, 'last_name': _lastNameController.text, 'email': _emailController.text, 'password': _passwordController.text, 'pin': _pinController.text, 'phone_number': _phoneNumberController.text, 'birth_date': birthDate.toString(), 'expiration': expirationDate.toString(), 'is_admin': admin});
+                  bool rep = await widget.api.addUser({'gender': gender, 'first_name': _firstNameController.text, 'last_name': _lastNameController.text, 'email': _emailController.text, 'password': _passwordController.text, 'pin': _pinController.text, 'phone_number': _phoneNumberController.text, 'birth_date': birthDate.toString(), 'expiration': expirationDate.toString(), 'is_admin': admin});
                   if(rep) {
                     Fluttertoast.showToast(
                       msg: "Utilisateur ajouté avec succès"
