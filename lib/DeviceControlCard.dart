@@ -7,9 +7,8 @@ import 'package:iria/objects/Device.dart';
 class DeviceControlCard extends StatefulWidget  {
   final Map device;
   final API api;
-  final Future<Map> status;
 
-  DeviceControlCard({this.device, this.api, this.status});
+  DeviceControlCard({this.device, this.api});
 
   @override
   _DeviceControlCardState createState() => _DeviceControlCardState();
@@ -24,7 +23,6 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
   void initState() {
     setState(() {
       device = Device(id: widget.device['id'], name: widget.device['name'], addr: widget.device['addr'], type: widget.device['type'], room: widget.device['room'], status: Map<String, dynamic>());
-      status = widget.status;
     });
     super.initState();
   }
@@ -32,7 +30,7 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: status,
+      future: widget.api.getDeviceStatus(device.id),
       builder: (context, AsyncSnapshot<Map> snapshot) {
         if(snapshot.hasData)  {
           device.status = snapshot.data;
@@ -46,14 +44,14 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
                 device.status.containsKey('power') ? IconButton(
                 icon: device.getIcon(),
                 color: device.getColor(),
-                onPressed: () => handleToggle()
+                onPressed: () => !_loading ? handleToggle() : null
               ) : FutureBuilder(
-                future: Future.delayed(Duration(seconds: 2)),
+                future: Future.delayed(Duration(seconds: 5)),
                 builder: (context, s) => s.connectionState == ConnectionState.done
                     ? IconButton(
                       icon: device.getIcon(),
                       color: device.getColor(),
-                      onPressed: () => handleToggle()
+                      onPressed: () => !_loading ? handleToggle() : null
                     )
                     : 
                     CircularProgressIndicator()
@@ -105,14 +103,14 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
             device.status.containsKey('state') || device.status.containsKey('power') ? IconButton(
                 icon: device.getIcon(),
                 color: device.getColor(),
-                onPressed: () => handleToggle()
+                onPressed: () => !_loading ? handleToggle() : null
               ) : FutureBuilder(
-                future: Future.delayed(Duration(seconds: 2)),
+                future: Future.delayed(Duration(seconds: 5)),
                 builder: (context, s) => s.connectionState == ConnectionState.done
                     ? IconButton(
                       icon: device.getIcon(),
                       color: device.getColor(),
-                      onPressed: () => handleToggle()
+                      onPressed: () => !_loading ? handleToggle() : null
                     )
                     : 
                     CircularProgressIndicator()
@@ -128,10 +126,7 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
       _loading = true;
     });
     await widget.api.controlDevice([device.toggle()]);
-    status = widget.api.getDeviceStatus(device.id);
-    setState(() {
-      _loading = true;
-    });
+    if(device.type == "lock") Future.delayed(const Duration(milliseconds: 1000));
   }
 
   void handleBrightnessChange(double value) async {
@@ -140,10 +135,6 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
     });
     device.status['bright'] = value;
     await widget.api.controlDevice([{'id': device.id, 'brightness': value}]);
-    status = widget.api.getDeviceStatus(device.id);
-    setState(() {
-      _loading = true;
-    });
   }
 
   void handleTemperatureChange(double value) async  {
@@ -152,10 +143,6 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
     });
     device.status['ct'] = value;
     await widget.api.controlDevice([{'id': device.id, 'ct': value}]);
-    status = widget.api.getDeviceStatus(device.id);
-    setState(() {
-      _loading = true;
-    });
   }
 
   void handleColorChange() async {
@@ -163,10 +150,6 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
       _loading = true;
     });
     await widget.api.controlDevice([{'id': device.id, 'color': device.status['rgb']}]);
-    status = widget.api.getDeviceStatus(device.id);
-    setState(() {
-      _loading = true;
-    });
   }
 
   void openColorPicker()  {

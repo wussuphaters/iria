@@ -25,8 +25,9 @@ class Device    {
     else if(type == "light-xiaomi" || type == "light-philips" || type == "light-tasmota") {
       iconData = Icons.lightbulb_outline;
     } else if(type == "lock") {
-      if(status['state'] == "lock") iconData = Icons.lock;
-      else iconData = Icons.lock_open;
+      if(status['state'] == "locked") iconData = Icons.lock;
+      else if(status['state'] == "unlocked") iconData = Icons.lock_open;
+      else iconData = Icons.help_outline;
     } else if(type == "switch-tasmota") {
       iconData = Icons.power_settings_new;
     } else iconData = Icons.help_outline;
@@ -51,8 +52,8 @@ class Device    {
       if(status['power'] == "on") payload = {'id': id, 'power': "off"};
       else payload = {'id': id, 'power': "on"};
     } else if(type == "lock") {
-      if(status['state'] == "unlock") payload = {'id': id, 'state': "lock"};
-      else payload = {'id': id, 'state': "unlock"};
+      if(status['state'] == "unlocked") payload = {'id': id, 'state': "lock"};
+      else if(status['state'] == "locked") payload = {'id': id, 'state': "unlock"};
     } else payload = {};
 
     return payload;
