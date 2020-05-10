@@ -126,7 +126,6 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
       _loading = true;
     });
     await widget.api.controlDevice([device.toggle()]);
-    if(device.type == "lock") Future.delayed(const Duration(milliseconds: 1000));
   }
 
   void handleBrightnessChange(double value) async {
