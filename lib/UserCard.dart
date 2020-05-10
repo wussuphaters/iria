@@ -38,11 +38,11 @@ class _UserCardState extends State<UserCard> {
           children: <Widget>[
             Row(children: <Widget>[Icon(Icons.email), Text(user.email)]),
             Row(children: <Widget>[Icon(Icons.phone), Text(user.phoneNumber)]),
-            Row(children: <Widget>[Icon(Icons.access_time), Text(user.expiration)]),
+            user.expiration != null ? Row(children: <Widget>[Icon(Icons.access_time), Text(user.expiration.toString())]) : SizedBox.shrink(),
             Row(children: <Widget>[
               IconButton(
                 icon: Icon(Icons.mode_edit),
-                onPressed: () => Navigator.pushNamed(context, Routes.updateUser),
+                onPressed: () => Navigator.pushNamed(context, Routes.updateUser, arguments: {'user': user}),
               ),
               IconButton(
                 icon: Icon(Icons.delete),

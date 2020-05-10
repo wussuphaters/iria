@@ -35,17 +35,17 @@ class _UserFormState extends State<UserForm> {
 
   @override
   void initState() {
-    admin = false;
-    expiration = false;
-    loading = false;
     user= widget.user;
+    admin = user != null ? user.isAdmin : false;
+    expiration = user != null ? (user.expiration != null ? true : false) : false;
+    loading = false;
     _firstNameController = new TextEditingController(text: user != null ? user.firstName : "");
     _lastNameController = new TextEditingController(text: user != null ? user.lastName : "");
     _emailController = new TextEditingController(text: user != null ? user.email : "");
     _phoneNumberController = new TextEditingController(text: user != null ? user.phoneNumber : "");
     _passwordController = new TextEditingController();
     _pinController = new TextEditingController();
-    gender = 'Homme';
+    gender = user != null ? user.gender : 'Homme';
     super.initState();
   }
 
@@ -117,7 +117,7 @@ class _UserFormState extends State<UserForm> {
               decoration: InputDecoration(
                 labelText: "Date de naissance"
               ),
-              initialValue: user != null ? DateTime.parse(user.birthDate) : null,
+              initialValue: user != null ? user.birthDate : null,
               onShowPicker: (context, currentValue)  {
                 return showDatePicker(
                   context: context,
@@ -186,35 +186,36 @@ class _UserFormState extends State<UserForm> {
               validator: (DateTime value)  {
                 return value == null ? "Sélectionnez une date d'expiration" : null;
               },
-                decoration: InputDecoration(labelText: "Date d'expiration"),
-                format: DateFormat("yyyy-MM-dd HH:mm:00"),
-                onShowPicker: (context, currentValue) async {
-                  final date = await showDatePicker(
+              initialValue: user != null ? user.expiration : null,
+              decoration: InputDecoration(labelText: "Date d'expiration"),
+              format: DateFormat("yyyy-MM-dd HH:mm:00"),
+              onShowPicker: (context, currentValue) async {
+                final date = await showDatePicker(
+                  context: context,
+                  firstDate: DateTime.now(),
+                  initialDate: currentValue ?? DateTime.now(),
+                  lastDate: DateTime(2100),
+                  confirmText: "OK",
+                  cancelText: "ANNULER",
+                  locale: Localizations.localeOf(context),
+                  helpText: ""
+                );
+                if(date != null) {
+                  final time = await showTimePicker(
                     context: context,
-                    firstDate: DateTime.now(),
-                    initialDate: currentValue ?? DateTime.now(),
-                    lastDate: DateTime(2100),
-                    confirmText: "OK",
-                    cancelText: "ANNULER",
-                    locale: Localizations.localeOf(context),
-                    helpText: ""
+                    initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
                   );
-                  if(date != null) {
-                    final time = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-                    );
-                    return DateTimeField.combine(date, time);
-                  } else {
-                    return currentValue;
-                  }
-                },
-                onChanged: (DateTime value) {
-                  setState(() {
-                    expirationDate = value;
-                  });
+                  return DateTimeField.combine(date, time);
+                } else {
+                  return currentValue;
                 }
-              ) : SizedBox.shrink(),
+              },
+              onChanged: (DateTime value) {
+                setState(() {
+                  expirationDate = value;
+                });
+              }
+            ) : SizedBox.shrink(),
             FlatButton(
               child: loading ? CircularProgressIndicator() : (user != null ? Text("Modifier") : Text("Ajouter")),
               onPressed: () async {
@@ -222,6 +223,7 @@ class _UserFormState extends State<UserForm> {
                   setState(() {
                     loading = true;
                   });
+                  print(expirationDate);
                   bool rep = await widget.api.addUser({'gender': gender, 'first_name': _firstNameController.text, 'last_name': _lastNameController.text, 'email': _emailController.text, 'password': _passwordController.text, 'pin': _pinController.text, 'phone_number': _phoneNumberController.text, 'birth_date': birthDate.toString(), 'expiration': expirationDate.toString(), 'is_admin': admin});
                   if(rep) {
                     Fluttertoast.showToast(

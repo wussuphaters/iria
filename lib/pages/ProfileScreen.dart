@@ -26,7 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _lastNameController = new TextEditingController(text: user.lastName);
     _emailController = new TextEditingController(text: user.email);
     _phoneNumberController = new TextEditingController(text: user.phoneNumber);
-    _birthDateController = new TextEditingController(text: user.birthDate);
+    _birthDateController = new TextEditingController(text: user.birthDate.toString());
 
     return Scaffold(
       appBar: AppBar(

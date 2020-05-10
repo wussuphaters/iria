@@ -177,8 +177,7 @@ class API {
         'is_admin' : user['is_admin']
       }
     };
-
-    if(user['expiration'] != null) requestBody['expiration'] = user['expiration'];
+    if(user['expiration'] != null) requestBody['user']['expiration'] = user['expiration'];
 
     http.Response rep = await http.post(
       '${this.addr}/user/add.php',

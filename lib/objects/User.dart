@@ -6,12 +6,13 @@ class User  {
   int id;
   String firstName;
   String lastName;
+  String gender;
   String email;
   String phoneNumber;
-  String birthDate;
+  DateTime birthDate;
   bool isAdmin;
   String created;
-  String expiration;
+  DateTime expiration;
   String jwt;
 
   User();
@@ -20,12 +21,14 @@ class User  {
     id=int.parse(data['id']);
     firstName = data['first_name'];
     lastName = data['last_name'];
+    gender = data['gender'];
     email = data['email'];
     phoneNumber = data['phone_number'];
-    birthDate = data['birth_date'];
+    birthDate = DateTime.parse(data['birth_date']);
     isAdmin = data['is_admin'] == '1' ? true : false;
     created = data['created'];
-    expiration = data['expiration'];
+    expiration = DateTime.parse(data['expiration']);
+    if(expiration.isAfter(DateTime.now().add(Duration(days: 365)))) expiration = null;
   }
 
   void logout(BuildContext context) {
