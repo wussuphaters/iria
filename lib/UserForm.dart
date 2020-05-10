@@ -46,6 +46,8 @@ class _UserFormState extends State<UserForm> {
     _passwordController = new TextEditingController();
     _pinController = new TextEditingController();
     gender = user != null ? user.gender : 'Homme';
+    expirationDate = user != null ? user.expiration : null;
+    birthDate = user != null ? user.birthDate : null;
     super.initState();
   }
 
@@ -142,10 +144,12 @@ class _UserFormState extends State<UserForm> {
                 labelText: "Mot de passe"
               ),
               validator: (value)  {
-                if(value.isEmpty) return "Entrez un mot de passe";
-                else if(value.length < 8) return "Le mot de passe doit faire au moins 8 caractères";
-                else if(!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$').hasMatch(value)) return "Minimum une minuscule, une majuscule et un chiffre";
-                else return null;
+                if(user == null || value.length > 0)  {
+                  if(value.isEmpty) return "Entrez un mot de passe";
+                  else if(value.length < 8) return "Le mot de passe doit faire au moins 8 caractères";
+                  else if(!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$').hasMatch(value)) return "Minimum une minuscule, une majuscule et un chiffre";
+                  else return null;
+                } else return null;
               }
             ),
             TextFormField(
@@ -154,9 +158,12 @@ class _UserFormState extends State<UserForm> {
                 labelText: "Code PIN"
               ),
               validator: (value)  {
-                if(value.isEmpty) return "Entrez un code PIN";
-                else if(value.length < 8) return "Le code PIN doit faire 8 caractères";
-                else return null;
+                if(user == null || value.length > 0)  {
+                  if(value.isEmpty) return "Entrez un code PIN";
+                  else if(value.length < 8) return "Le code PIN doit faire 8 caractères";
+                  else if(!RegExp(r'^(?=.*[A-D])(?=.*\d)[A-D\d]{8,}$').hasMatch(value)) return "Le PIN doit être un mélange de chiffres et de lettres (A/B/C/D)";
+                  else return null;
+                } else return null;
               },
               inputFormatters: [WhitelistingTextInputFormatter(RegExp('[0-9A-D]')), LengthLimitingTextInputFormatter(8)]
             ),
@@ -178,6 +185,7 @@ class _UserFormState extends State<UserForm> {
                 onChanged: (bool value) {
                   setState(() {
                     expiration=value;
+                    if(!expiration) expirationDate = null;
                   });
                 },
               )
@@ -223,11 +231,12 @@ class _UserFormState extends State<UserForm> {
                   setState(() {
                     loading = true;
                   });
-                  print(expirationDate);
-                  bool rep = await widget.api.addUser({'gender': gender, 'first_name': _firstNameController.text, 'last_name': _lastNameController.text, 'email': _emailController.text, 'password': _passwordController.text, 'pin': _pinController.text, 'phone_number': _phoneNumberController.text, 'birth_date': birthDate.toString(), 'expiration': expirationDate.toString(), 'is_admin': admin});
+                  bool rep;
+                  if(user != null) rep = await widget.api.updateUser({'id': user.id, 'gender': gender, 'first_name': _firstNameController.text, 'last_name': _lastNameController.text, 'email': _emailController.text, 'password': _passwordController.text, 'pin': _pinController.text, 'phone_number': _phoneNumberController.text, 'birth_date': birthDate.toString(), 'expiration': expiration ? expirationDate.toString() : "", 'is_admin': admin?1:0});
+                  else rep = await widget.api.addUser({'gender': gender, 'first_name': _firstNameController.text, 'last_name': _lastNameController.text, 'email': _emailController.text, 'password': _passwordController.text, 'pin': _pinController.text, 'phone_number': _phoneNumberController.text, 'birth_date': birthDate.toString(), 'expiration': expiration ? expirationDate.toString() : "", 'is_admin': admin?1:0});
                   if(rep) {
                     Fluttertoast.showToast(
-                      msg: "Utilisateur ajouté avec succès"
+                      msg: "Utilisateur "+(user == null ? "ajouté" : "modifié")+" avec succès"
                     );
                     Navigator.pop(context);
                   } else{
@@ -235,7 +244,7 @@ class _UserFormState extends State<UserForm> {
                       context: context,
                       builder: (context) =>
                         AlertDialog(
-                          title: Text("Impossible d'ajouter l'utilisateur"),
+                          title: Text("Impossible "+(user == null ? "d'ajouter" : "de modifier")+" l'utilisateur"),
                           content: Text(widget.api.lastErrorMsg)
                         ),
                     );

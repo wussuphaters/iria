@@ -166,21 +166,40 @@ class API {
     Map<String, dynamic> requestBody = {
       'token' : jwt,
       'user' : {
-        'gender' : user['gender'],
-        'first_name' : user['first_name'],
-        'last_name' : user['last_name'],
-        'email' : user['email'],
-        'password' : user['password'],
-        'pin' : user['pin'],
-        'phone_number' : user['phone_number'],
-        'birth_date' : user['birth_date'],
-        'is_admin' : user['is_admin']
       }
     };
-    if(user['expiration'] != null) requestBody['user']['expiration'] = user['expiration'];
+
+    user.forEach((key, value) {
+      requestBody['user'][key] = value;
+    });
 
     http.Response rep = await http.post(
       '${this.addr}/user/add.php',
+      body: jsonEncode(requestBody)
+    );
+
+    if(rep.statusCode == 200) return true;
+    else  {
+      lastErrorMsg = jsonDecode(rep.body)['error'];
+      return false;
+    }
+  }
+
+  Future<bool> updateUser(Map user) async {
+    Map<String, dynamic> requestBody = {
+      'token' : jwt,
+      'user' : {
+      }
+    };
+
+    user.forEach((key, value) {
+      requestBody['user'][key] = value;
+    });
+
+    print(jsonEncode(requestBody));
+
+    http.Response rep = await http.post(
+      '${this.addr}/user/update.php',
       body: jsonEncode(requestBody)
     );
 
