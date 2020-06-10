@@ -56,6 +56,8 @@ class Device    {
       else if(status['state'] == "locked") payload = {'id': id, 'state': "unlock"};
     } else if(type == "ir-tasmota") {
       payload = {'id': id, 'action': 'power'};
+    }else if(type == "momentary") {
+      payload = {'id': id};
     } else  payload = {};
 
     return payload;
