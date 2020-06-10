@@ -111,7 +111,6 @@ class API {
         if(status.containsKey('rgb')) {
           status['rgb'] = int.parse(status['rgb']).toRadixString(16);
         }
-        
         return status;
       } else  {
         lastErrorMsg = json.decode(response.body)['error'];

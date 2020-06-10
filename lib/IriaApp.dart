@@ -30,7 +30,7 @@ class _IriaAppState extends State<IriaApp> {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        Routes.profile : (context) => ProfileScreen(),
+        Routes.profile : (context) => ProfileScreen(api: api),
         Routes.control : (context) => ControlScreen(api: api),
         Routes.login : (context) => LoginScreen(api: api),
         Routes.users : (context) => UsersScreen(api: api),

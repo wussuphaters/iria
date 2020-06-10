@@ -28,7 +28,7 @@ class Device    {
       if(status['state'] == "locked") iconData = Icons.lock;
       else if(status['state'] == "unlocked") iconData = Icons.lock_open;
       else iconData = Icons.help_outline;
-    } else if(type == "switch-tasmota") {
+    } else if(type == "switch-tasmota" || type == "ir-tasmota" || type == "momentary") {
       iconData = Icons.power_settings_new;
     } else iconData = Icons.help_outline;
 
@@ -54,7 +54,9 @@ class Device    {
     } else if(type == "lock") {
       if(status['state'] == "unlocked") payload = {'id': id, 'state': "lock"};
       else if(status['state'] == "locked") payload = {'id': id, 'state': "unlock"};
-    } else payload = {};
+    } else if(type == "ir-tasmota") {
+      payload = {'id': id, 'action': 'power'};
+    } else  payload = {};
 
     return payload;
   }

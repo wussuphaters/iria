@@ -177,7 +177,7 @@ class _UserFormState extends State<UserForm> {
                   });
                 },
               )
-            ],),
+            ]),
             Row(children: <Widget>[
               Text("Expiration"),
               Checkbox(
