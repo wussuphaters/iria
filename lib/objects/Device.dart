@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Device    {
+class Device {
   String id;
   String name;
   String addr;
@@ -19,46 +19,79 @@ class Device    {
     room = data['room'];
   }
 
-  Widget getIcon()  {
+  Widget getIcon() {
     IconData iconData;
-    if(status.length == 0) iconData = Icons.warning;
-    else if(type == "light-xiaomi" || type == "light-philips" || type == "light-tasmota") {
+    if (status.length == 0)
+      iconData = Icons.warning;
+    else if (type == "light-xiaomi" ||
+        type == "light-philips" ||
+        type == "light-tasmota") {
       iconData = Icons.lightbulb_outline;
-    } else if(type == "lock") {
-      if(status['state'] == "locked") iconData = Icons.lock;
-      else if(status['state'] == "unlocked") iconData = Icons.lock_open;
-      else iconData = Icons.help_outline;
-    } else if(type == "switch-tasmota" || type == "ir-tasmota" || type == "momentary") {
+    } else if (type == "lock") {
+      if (status['state'] == "locked")
+        iconData = Icons.lock;
+      else if (status['state'] == "unlocked")
+        iconData = Icons.lock_open;
+      else
+        iconData = Icons.help_outline;
+    } else if (type == "switch-tasmota" ||
+        type == "ir-tasmota" ||
+        type == "momentary") {
       iconData = Icons.power_settings_new;
-    } else iconData = Icons.help_outline;
+    } else if (type == "blinds") {
+      if (status['state'] == "open")
+        iconData = Icons.arrow_drop_down;
+      else if (status['state'] == "closed") iconData = Icons.arrow_drop_up;
+    } else
+      iconData = Icons.help_outline;
 
     return Icon(iconData);
   }
 
-  MaterialColor getColor()  {
+  MaterialColor getColor() {
     MaterialColor color;
-    if(status.length == 0) color = Colors.grey;
-    else if((type == "light-xiaomi" || type == "light-philips" || type == "light-tasmota" || type == "switch-tasmota") && status['power'] == "on")  {
+    if (status.length == 0)
+      color = Colors.grey;
+    else if ((type == "light-xiaomi" ||
+            type == "light-philips" ||
+            type == "light-tasmota" ||
+            type == "switch-tasmota") &&
+        status['power'] == "on") {
       color = Colors.amber;
-    } else color = Colors.grey;
+    } else
+      color = Colors.grey;
 
     return color;
   }
 
   Map toggle() {
     Map payload;
-    if(status.length == 0) payload = {};
-    else if(type == "light-xiaomi" || type == "light-philips" || type == "light-tasmota" || type == "switch-tasmota") {
-      if(status['power'] == "on") payload = {'id': id, 'power': "off"};
-      else payload = {'id': id, 'power': "on"};
-    } else if(type == "lock") {
-      if(status['state'] == "unlocked") payload = {'id': id, 'state': "lock"};
-      else if(status['state'] == "locked") payload = {'id': id, 'state': "unlock"};
-    } else if(type == "ir-tasmota") {
+    if (status.length == 0)
+      payload = {};
+    else if (type == "light-xiaomi" ||
+        type == "light-philips" ||
+        type == "light-tasmota" ||
+        type == "switch-tasmota") {
+      if (status['power'] == "on")
+        payload = {'id': id, 'power': "off"};
+      else
+        payload = {'id': id, 'power': "on"};
+    } else if (type == "lock") {
+      if (status['state'] == "unlocked")
+        payload = {'id': id, 'state': "lock"};
+      else if (status['state'] == "locked")
+        payload = {'id': id, 'state': "unlock"};
+    } else if (type == "ir-tasmota") {
       payload = {'id': id, 'action': 'power'};
-    }else if(type == "momentary") {
+    } else if (type == "momentary") {
       payload = {'id': id};
-    } else  payload = {};
+    } else if (type == "blinds") {
+      if (status['state'] == "open")
+        payload = {'id': id, 'state': "close"};
+      else if (status['state'] == "closed")
+        payload = {'id': id, 'state': "open"};
+    } else
+      payload = {};
 
     return payload;
   }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iria/Routes.dart';
 import 'package:iria/objects/User.dart';
 
-class Menu extends StatefulWidget  {
+class Menu extends StatefulWidget {
   final User user;
 
   Menu({this.user});
@@ -15,47 +15,56 @@ class Menu extends StatefulWidget  {
 class _MenuState extends State<Menu> {
   Widget build(BuildContext context) {
     return Drawer(
-        child: ListView(
+      child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           _createDrawerItem(
-            icon: Icons.lightbulb_outline,
-            text: 'Contrôle',
-            onTap: () => Navigator.pushReplacementNamed(context, Routes.control, arguments: {"user": widget.user})
-          ),
-          widget.user.isAdmin ? _createDrawerItem(
-            icon: Icons.group,
-            text: 'Utilisateurs',
-            onTap: () => Navigator.pushReplacementNamed(context, Routes.users, arguments: {"user": widget.user})
-          ) : Row(),
-          widget.user.isAdmin ? _createDrawerItem(
-            icon: Icons.devices,
-            text: 'Appareils',
-            onTap: () => Navigator.pushReplacementNamed(context, Routes.devices, arguments: {"user": widget.user})
-          ) : Row(),
+              icon: Icons.lightbulb_outline,
+              text: 'Contrôle',
+              onTap: () => Navigator.pushReplacementNamed(
+                  context, Routes.control,
+                  arguments: {"user": widget.user})),
+          widget.user.isAdmin
+              ? _createDrawerItem(
+                  icon: Icons.group,
+                  text: 'Utilisateurs',
+                  onTap: () => Navigator.pushReplacementNamed(
+                      context, Routes.users,
+                      arguments: {"user": widget.user}))
+              : Row(),
+          widget.user.isAdmin
+              ? _createDrawerItem(
+                  icon: Icons.devices,
+                  text: 'Appareils',
+                  onTap: () => Navigator.pushReplacementNamed(
+                      context, Routes.devices,
+                      arguments: {"user": widget.user}))
+              : Row(),
           _createDrawerItem(
-            icon: Icons.account_circle,
-            text: 'Profil de ${widget.user.firstName}',
-            onTap: () => Navigator.pushReplacementNamed(context, Routes.profile, arguments: {"user": widget.user})
-          ),
+              icon: Icons.account_circle,
+              text: 'Profil de ${widget.user.firstName}',
+              onTap: () => Navigator.pushReplacementNamed(
+                  context, Routes.profile,
+                  arguments: {"user": widget.user})),
+          widget.user.isAdmin
+              ? _createDrawerItem(
+                  icon: Icons.home,
+                  text: 'Pièces',
+                  onTap: () => Navigator.pushReplacementNamed(
+                      context, Routes.rooms,
+                      arguments: {"user": widget.user}))
+              : Row(),
           _createDrawerItem(
-            icon: Icons.home,
-            text: 'Pièces',
-            onTap: () => Navigator.pushReplacementNamed(context, Routes.rooms, arguments: {"user": widget.user})
-          ),
-          _createDrawerItem(
-            icon: Icons.lock_outline,
-            text: 'Déconnexion',
-            onTap: () => showAlertDialog(context)
-          ),
+              icon: Icons.lock_outline,
+              text: 'Déconnexion',
+              onTap: () => showAlertDialog(context)),
         ],
       ),
-      
     );
   }
 
   Widget _createDrawerItem(
-    {IconData icon, String text, GestureTapCallback onTap}) {
+      {IconData icon, String text, GestureTapCallback onTap}) {
     return ListTile(
       title: Row(
         children: <Widget>[
@@ -73,18 +82,16 @@ class _MenuState extends State<Menu> {
   showAlertDialog(BuildContext context) {
     AlertDialog logoff = AlertDialog(
       title: Text("Déconnexion"),
-      content: Text("Êtes vous sûr de vouloir vous déconnecter de l'application ?"),
+      content:
+          Text("Êtes vous sûr de vouloir vous déconnecter de l'application ?"),
       actions: <Widget>[
         FlatButton(
-          child: Text("ANNULER"),
-          onPressed: (){
-            Navigator.pop(context);
-          }
-        ),
+            child: Text("ANNULER"),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
         FlatButton(
-          child: Text("OUI"),
-          onPressed: () => widget.user.logout(context)
-        )
+            child: Text("OUI"), onPressed: () => widget.user.logout(context))
       ],
     );
 

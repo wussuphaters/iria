@@ -20,28 +20,27 @@ class IriaApp extends StatefulWidget {
 }
 
 class _IriaAppState extends State<IriaApp> {
-  API api = API(addr: 'http://192.168.1.100/smart_home_api/api');
+  API api = API();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Iria Application',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      routes: {
-        Routes.profile : (context) => ProfileScreen(api: api),
-        Routes.control : (context) => ControlScreen(api: api),
-        Routes.login : (context) => LoginScreen(api: api),
-        Routes.users : (context) => UsersScreen(api: api),
-        Routes.devices : (context) => DevicesScreen(api: api),
-        Routes.addUser : (context) => AddUserScreen(api: api),
-        Routes.addDevice : (context) => AddDeviceScreen(api: api),
-        Routes.updateUser : (context) => UpdateUserScreen(api: api),
-        Routes.updateDevice : (context) => UpdateDeviceScreen(api: api),
-        Routes.rooms : (context) => RoomsScreen(api: api),
-        Routes.addRoom : (context) => AddRoomScreen(api: api)
-      }
-    );
+        title: 'Iria Application',
+        theme: ThemeData(
+          primarySwatch: Colors.teal,
+        ),
+        routes: {
+          Routes.profile: (context) => ProfileScreen(api: api),
+          Routes.control: (context) => ControlScreen(api: api),
+          Routes.login: (context) => LoginScreen(api: api),
+          Routes.users: (context) => UsersScreen(api: api),
+          Routes.devices: (context) => DevicesScreen(api: api),
+          Routes.addUser: (context) => AddUserScreen(api: api),
+          Routes.addDevice: (context) => AddDeviceScreen(api: api),
+          Routes.updateUser: (context) => UpdateUserScreen(api: api),
+          Routes.updateDevice: (context) => UpdateDeviceScreen(api: api),
+          Routes.rooms: (context) => RoomsScreen(api: api),
+          Routes.addRoom: (context) => AddRoomScreen(api: api)
+        });
   }
 }
