@@ -189,7 +189,7 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
 
   void handleFingerprintDelete() async {
     bool res = await widget.api.controlDevice([
-      {'id': device.id}
+      {'id': device.id, "delete": ""}
     ]);
 
     if (!res)
