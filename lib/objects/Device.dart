@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Device {
   String id;
@@ -40,8 +41,13 @@ class Device {
       iconData = Icons.power_settings_new;
     } else if (type == "blinds") {
       if (status['state'] == "open")
-        iconData = Icons.arrow_drop_down;
-      else if (status['state'] == "closed") iconData = Icons.arrow_drop_up;
+        iconData = Icons.arrow_downward;
+      else if (status['state'] == "close") iconData = Icons.arrow_upward;
+    } else if (type == "vent") {
+      if (status['state'] == "open")
+        iconData = Icons.radio_button_unchecked;
+      else if (status['state'] == "close")
+        iconData = Icons.radio_button_checked;
     } else
       iconData = Icons.help_outline;
 
@@ -85,10 +91,10 @@ class Device {
       payload = {'id': id, 'action': 'power'};
     } else if (type == "momentary") {
       payload = {'id': id};
-    } else if (type == "blinds") {
+    } else if (type == "blinds" || type == "vent") {
       if (status['state'] == "open")
         payload = {'id': id, 'state': "close"};
-      else if (status['state'] == "closed")
+      else if (status['state'] == "close")
         payload = {'id': id, 'state': "open"};
     } else
       payload = {};

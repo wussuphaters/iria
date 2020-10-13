@@ -13,7 +13,7 @@ class API {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.wifi) {
       var wifiName = await Connectivity().getWifiName();
-      if (wifiName == "tuveuxdupoulet")
+      if (wifiName == "tuveuxdupoulet" || wifiName == "tuveuxdladinde")
         return "http://192.168.1.100/smart_home_api/api";
     }
 
@@ -74,12 +74,17 @@ class API {
     return jsonDecode(response.body);
   }
 
-  Future<void> controlDevice(List payload) async {
+  Future<bool> controlDevice(List payload) async {
     http.Response response = await http.post('${this.addr}/device/control.php',
         body: jsonEncode(<String, dynamic>{'token': jwt, 'devices': payload}));
 
-    if (response.statusCode != 200)
+    print(jsonEncode(<String, dynamic>{'token': jwt, 'devices': payload}));
+
+    if (response.statusCode != 200) {
       lastErrorMsg = json.decode(response.body)['error'];
+      return false;
+    }
+    return true;
   }
 
   Future<Map> getDeviceStatus(String id) async {

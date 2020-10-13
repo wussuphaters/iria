@@ -22,33 +22,32 @@ class _ControlScreenState extends State<ControlScreen> {
   @override
   Widget build(BuildContext context) {
     Map args = ModalRoute.of(context).settings.arguments;
-    if(args != null) user = args['user'];
+    if (args != null) user = args['user'];
 
     return FutureBuilder(
       future: widget.api.getDevices(),
-      builder: (context, AsyncSnapshot<Map> snapshot)  {
-        if(snapshot.hasData)  {
+      builder: (context, AsyncSnapshot<Map> snapshot) {
+        if (snapshot.hasData) {
           devices = snapshot.data['devices'];
-          if(devices == null) user.logout(context);
+          if (devices == null) user.logout(context);
         }
         return Scaffold(
-          appBar: AppBar(
-            title : Text("Contrôle")
-          ),
-          body: snapshot.hasData ? ListView.builder(
-            itemCount: devices.length,
-            itemBuilder: (BuildContext context, int index)  {
-              return DeviceControlCard(device: devices[index], api: widget.api);
-            },
-          ) : Center(
-            child: FutureBuilder(
-                future: Future.delayed(Duration(seconds: 2)),
-                builder: (context, s) => s.connectionState == ConnectionState.done
-                    ? Text("Impossible de se connecter à l'API.")
-                    : 
-                    CircularProgressIndicator()
-              )
-          ),
+          appBar: AppBar(title: Text("Contrôle")),
+          body: snapshot.hasData
+              ? ListView.builder(
+                  itemCount: devices.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return DeviceControlCard(
+                        device: devices[index], api: widget.api);
+                  },
+                )
+              : Center(
+                  child: FutureBuilder(
+                      future: Future.delayed(Duration(seconds: 2)),
+                      builder: (context, s) =>
+                          s.connectionState == ConnectionState.done
+                              ? Text("Impossible de se connecter à l'API.")
+                              : CircularProgressIndicator())),
           drawer: Menu(user: user),
         );
       },
