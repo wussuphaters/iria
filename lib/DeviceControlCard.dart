@@ -66,74 +66,103 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
               children: (device.type == "light-xiaomi" ||
                       device.type == "light-philips")
                   ? <Widget>[
-                      Text("Luminosité"),
-                      Slider(
-                          min: 1,
-                          max: 100,
-                          value: device.status.containsKey("bright")
-                              ? device.status['bright']
-                              : 50,
-                          divisions: 100,
-                          onChanged: (device.status.containsKey('power') &&
-                                  device.status['power'] == "on" &&
-                                  !_loading)
-                              ? (value) {
-                                  device.status['bright'] = value;
-                                  status = null;
-                                  setState(() {});
-                                }
-                              : null,
-                          onChangeEnd: (value) =>
-                              (device.status.containsKey('power') &&
+                      Row(
+                        children: [
+                          Text("Luminosité"),
+                          Slider(
+                              min: 1,
+                              max: 100,
+                              value: device.status.containsKey("bright")
+                                  ? device.status['bright']
+                                  : 50,
+                              divisions: 100,
+                              onChanged: (device.status.containsKey('power') &&
                                       device.status['power'] == "on" &&
                                       !_loading)
-                                  ? handleBrightnessChange(value)
-                                  : null),
-                      Text("Température"),
-                      Slider(
-                          min: 1700,
-                          max: 6500,
-                          value: device.status.containsKey("ct")
-                              ? device.status['ct']
-                              : 3500,
-                          divisions: 100,
-                          onChanged: (device.status.containsKey('power') &&
-                                  device.status['power'] == "on" &&
-                                  !_loading)
-                              ? (value) {
-                                  device.status['ct'] = value;
-                                  status = null;
-                                  setState(() {});
-                                }
-                              : null,
-                          onChangeEnd: (value) =>
-                              (device.status.containsKey('power') &&
+                                  ? (value) {
+                                      device.status['bright'] = value;
+                                      status = null;
+                                      setState(() {});
+                                    }
+                                  : null,
+                              onChangeEnd: (value) =>
+                                  (device.status.containsKey('power') &&
+                                          device.status['power'] == "on" &&
+                                          !_loading)
+                                      ? handleBrightnessChange(value)
+                                      : null)
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text("Température"),
+                          Slider(
+                              min: 1700,
+                              max: 6500,
+                              value: device.status.containsKey("ct")
+                                  ? device.status['ct']
+                                  : 3500,
+                              divisions: 100,
+                              onChanged: (device.status.containsKey('power') &&
                                       device.status['power'] == "on" &&
                                       !_loading)
-                                  ? handleTemperatureChange(value)
-                                  : null),
-                      Text("Couleur"),
-                      RawMaterialButton(
-                        onPressed: () => device.status['power'] == "on"
-                            ? openColorPicker()
-                            : null,
-                        elevation: 2.0,
-                        fillColor: device.status.containsKey('rgb')
-                            ? Color(int.parse(device.status['rgb'], radix: 16) +
-                                0xFF000000)
-                            : Colors.blue,
-                        padding: EdgeInsets.all(15.0),
-                        shape: CircleBorder(),
+                                  ? (value) {
+                                      device.status['ct'] = value;
+                                      status = null;
+                                      setState(() {});
+                                    }
+                                  : null,
+                              onChangeEnd: (value) =>
+                                  (device.status.containsKey('power') &&
+                                          device.status['power'] == "on" &&
+                                          !_loading)
+                                      ? handleTemperatureChange(value)
+                                      : null)
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text("Couleur"),
+                          RawMaterialButton(
+                            onPressed: () => device.status['power'] == "on"
+                                ? openColorPicker()
+                                : null,
+                            elevation: 2.0,
+                            fillColor: device.status.containsKey('rgb')
+                                ? Color(
+                                    int.parse(device.status['rgb'], radix: 16) +
+                                        0xFF000000)
+                                : Colors.blue,
+                            padding: EdgeInsets.all(15.0),
+                            shape: CircleBorder(),
+                          )
+                        ],
                       )
                     ]
                   : ((device.type == "lock")
                       ? <Widget>[
-                          IconButton(
-                              icon: Icon(Icons.fingerprint),
-                              color: device.getColor(),
-                              onPressed: () =>
-                                  !_loading ? handleFingerprintEnroll() : null),
-                          Text("Changer d'empreinte digitale")
+                          Row(
+                            children: [
+                              Text("Définir mon empreinte digitale"),
+                              IconButton(
+                                  icon: Icon(Icons.fingerprint),
+                                  color: device.getColor(),
+                                  onPressed: () => !_loading
+                                      ? handleFingerprintEnroll()
+                                      : null)
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text("Supprimer mon empreinte digitale"),
+                              IconButton(
+                                  icon: Icon(Icons.delete),
+                                  color: device.getColor(),
+                                  onPressed: () => !_loading
+                                      ? handleFingerprintDelete()
+                                      : null)
+                            ],
+                          )
                         ]
                       : <Widget>[
                           Text("Aucune action disponible pour cet appareil")
@@ -145,7 +174,9 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
     setState(() {
       _loading = true;
     });
-    await widget.api.controlDevice([device.toggle()]);
+    bool res = await widget.api.controlDevice([device.toggle()]);
+
+    if (!res) Fluttertoast.showToast(msg: widget.api.lastErrorMsg);
   }
 
   void handleFingerprintEnroll() async {
@@ -156,14 +187,27 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
     if (!res) Fluttertoast.showToast(msg: widget.api.lastErrorMsg);
   }
 
+  void handleFingerprintDelete() async {
+    bool res = await widget.api.controlDevice([
+      {'id': device.id}
+    ]);
+
+    if (!res)
+      Fluttertoast.showToast(msg: widget.api.lastErrorMsg);
+    else
+      Fluttertoast.showToast(msg: "Votre empreinte a bien été supprimée");
+  }
+
   void handleBrightnessChange(double value) async {
     setState(() {
       _loading = true;
     });
     device.status['bright'] = value;
-    await widget.api.controlDevice([
+    bool res = await widget.api.controlDevice([
       {'id': device.id, 'brightness': value}
     ]);
+
+    if (!res) Fluttertoast.showToast(msg: widget.api.lastErrorMsg);
   }
 
   void handleTemperatureChange(double value) async {
@@ -171,18 +215,22 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
       _loading = true;
     });
     device.status['ct'] = value;
-    await widget.api.controlDevice([
+    bool res = await widget.api.controlDevice([
       {'id': device.id, 'ct': value}
     ]);
+
+    if (!res) Fluttertoast.showToast(msg: widget.api.lastErrorMsg);
   }
 
   void handleColorChange() async {
     setState(() {
       _loading = true;
     });
-    await widget.api.controlDevice([
+    bool res = await widget.api.controlDevice([
       {'id': device.id, 'color': device.status['rgb']}
     ]);
+
+    if (!res) Fluttertoast.showToast(msg: widget.api.lastErrorMsg);
   }
 
   void openColorPicker() {

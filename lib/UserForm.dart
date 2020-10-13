@@ -24,6 +24,7 @@ class _UserFormState extends State<UserForm> {
   TextEditingController _phoneNumberController;
   TextEditingController _pinController;
   TextEditingController _passwordController;
+  TextEditingController _phoneIpController;
   bool admin;
   bool expiration;
   User user;
@@ -48,6 +49,8 @@ class _UserFormState extends State<UserForm> {
         new TextEditingController(text: user != null ? user.email : "");
     _phoneNumberController =
         new TextEditingController(text: user != null ? user.phoneNumber : "");
+    _phoneIpController =
+        new TextEditingController(text: user != null ? user.phoneIp : "");
     _passwordController = new TextEditingController();
     _pinController = new TextEditingController();
     gender = user != null ? user.gender : 'Homme';
@@ -105,6 +108,11 @@ class _UserFormState extends State<UserForm> {
                     else
                       return null;
                   }),
+              TextFormField(
+                controller: _phoneIpController,
+                decoration: InputDecoration(labelText: "Adresse IP sur le LAN"),
+                inputFormatters: [LengthLimitingTextInputFormatter(15)],
+              ),
               DateTimeField(
                   validator: (DateTime value) {
                     return value == null
@@ -252,6 +260,7 @@ class _UserFormState extends State<UserForm> {
                           'password': _passwordController.text,
                           'pin': _pinController.text,
                           'phone_number': _phoneNumberController.text,
+                          'phone_ip': _phoneIpController.text,
                           'birth_date': birthDate.toString(),
                           'expiration':
                               expiration ? expirationDate.toString() : "",
@@ -266,6 +275,7 @@ class _UserFormState extends State<UserForm> {
                           'password': _passwordController.text,
                           'pin': _pinController.text,
                           'phone_number': _phoneNumberController.text,
+                          'phone_ip': _phoneIpController.text,
                           'birth_date': birthDate.toString(),
                           'expiration':
                               expiration ? expirationDate.toString() : "",

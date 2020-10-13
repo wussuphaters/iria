@@ -9,6 +9,7 @@ class User {
   String gender;
   String email;
   String phoneNumber;
+  String phoneIp;
   DateTime birthDate;
   bool isAdmin;
   String created;
@@ -24,6 +25,7 @@ class User {
     gender = data['gender'];
     email = data['email'];
     phoneNumber = data['phone_number'];
+    phoneIp = data['phone_ip'];
     birthDate = DateTime.parse(data['birth_date']);
     isAdmin = data['is_admin'] == '1' ? true : false;
     created = data['created'];
