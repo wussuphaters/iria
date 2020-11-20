@@ -25,14 +25,21 @@ class _TaskCardState extends State<TaskCard> {
 
   @override
   Widget build(BuildContext context) {
-    return task != null ? Text("Tache") : SizedBox.shrink();
+    return task != null
+        ? ExpansionTile(
+            title: Row(children: <Widget>[
+              task.getIcon(),
+              Text("${task.name} (${task.actionCount} actions associées)")
+            ]),
+            children: <Widget>[])
+        : SizedBox.shrink();
   }
 
   void handleDelete(BuildContext context) {
     AlertDialog deleteUserDialog = AlertDialog(
       title: Text("Supprimer l'appareil"),
-      content: Text(
-          "Êtes vous sûr de vouloir supprimer l'appareil '${task.name}' ?"),
+      content:
+          Text("Êtes vous sûr de vouloir supprimer la tâche '${task.name}' ?"),
       actions: <Widget>[
         FlatButton(
             child: Text("ANNULER"),

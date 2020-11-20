@@ -78,13 +78,22 @@ class API {
   }
 
   Future<Map> getTasks() async {
-    /*http.Response response = await http.post('${this.addr}/task/get_all.php',
+    http.Response response = await http.post('${this.addr}/task/get_all.php',
         body: jsonEncode(<String, String>{'token': jwt}));
 
     if (response.statusCode != 200)
       lastErrorMsg = json.decode(response.body)['error'];
-    return jsonDecode(response.body);*/
-    return jsonDecode("{\"tasks\":[]}");
+    return jsonDecode(response.body);
+  }
+
+  Future<Map> getDeviceTypes() async {
+    http.Response response = await http.post(
+        '${this.addr}/devices/get_types.php',
+        body: jsonEncode(<String, String>{'token': jwt}));
+
+    if (response.statusCode != 200)
+      lastErrorMsg = json.decode(response.body)['error'];
+    return jsonDecode(response.body);
   }
 
   Future<bool> controlDevice(List payload) async {
