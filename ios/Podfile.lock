@@ -7,6 +7,8 @@ PODS:
     - Flutter
   - fluttertoast (0.0.2):
     - Flutter
+  - ios_network_info (0.0.1):
+    - Flutter
   - Reachability (3.2)
 
 DEPENDENCIES:
@@ -14,6 +16,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - ios_network_info (from `.symlinks/plugins/ios_network_info/ios`)
 
 SPEC REPOS:
   trunk:
@@ -28,12 +31,15 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
+  ios_network_info:
+    :path: ".symlinks/plugins/ios_network_info/ios"
 
 SPEC CHECKSUMS:
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   fluttertoast: b644586ef3b16f67fae9a1f8754cef6b2d6b634b
+  ios_network_info: cc65db3e7947f38d2952f7e6581a815141cf58a9
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c

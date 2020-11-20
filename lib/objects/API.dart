@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:core';
-import 'package:connectivity/connectivity.dart';
 import 'package:http/http.dart' as http;
 import 'package:iria/objects/User.dart';
 
@@ -10,14 +9,18 @@ class API {
   String lastErrorMsg;
 
   Future<String> getAddr() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
+    /*var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.wifi) {
       var wifiName = await Connectivity().getWifiName();
+      var bssid = await IosNetworkInfo.bssid;
+      print(bssid);
       if (wifiName == "tuveuxdupoulet" || wifiName == "tuveuxdladinde")
         return "http://192.168.1.100/smart_home_api/api";
     }
 
-    return "http://176.191.181.154:27323/smart_home_api/api";
+    return "http://176.191.181.154:27323/smart_home_api/api";*/
+
+    return "http://192.168.1.100/smart_home_api/api";
   }
 
   Future<String> login(String email, String password) async {
@@ -72,6 +75,16 @@ class API {
     if (response.statusCode != 200)
       lastErrorMsg = json.decode(response.body)['error'];
     return jsonDecode(response.body);
+  }
+
+  Future<Map> getTasks() async {
+    /*http.Response response = await http.post('${this.addr}/task/get_all.php',
+        body: jsonEncode(<String, String>{'token': jwt}));
+
+    if (response.statusCode != 200)
+      lastErrorMsg = json.decode(response.body)['error'];
+    return jsonDecode(response.body);*/
+    return jsonDecode("{\"tasks\":[]}");
   }
 
   Future<bool> controlDevice(List payload) async {

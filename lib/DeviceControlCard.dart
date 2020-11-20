@@ -4,10 +4,12 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iria/objects/API.dart';
 import 'package:iria/objects/Device.dart';
+import 'package:weekday_selector/weekday_selector.dart';
 
 class DeviceControlCard extends StatefulWidget {
   final Map device;
   final API api;
+  final weekdays = List.filled(7, false);
 
   DeviceControlCard({this.device, this.api});
 
@@ -19,6 +21,7 @@ class _DeviceControlCardState extends State<DeviceControlCard> {
   Future<Map> status;
   Device device;
   bool _loading = true;
+  Widget list;
 
   @override
   void initState() {

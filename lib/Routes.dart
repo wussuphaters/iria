@@ -1,5 +1,6 @@
 import 'package:iria/pages/AddDeviceScreen.dart';
 import 'package:iria/pages/AddUserScreen.dart';
+import 'package:iria/pages/AutomateScreen.dart';
 import 'package:iria/pages/ControlScreen.dart';
 import 'package:iria/pages/DevicesScreen.dart';
 import 'package:iria/pages/LoginScreen.dart';
@@ -10,7 +11,7 @@ import 'package:iria/pages/UpdateUserScreen.dart';
 import 'package:iria/pages/UsersScreen.dart';
 import 'package:iria/pages/AddRoomScreen.dart';
 
-class Routes  {
+class Routes {
   static const String login = LoginScreen.routeName;
   static const String profile = ProfileScreen.routeName;
   static const String control = ControlScreen.routeName;
@@ -22,4 +23,5 @@ class Routes  {
   static const String updateDevice = UpdateDeviceScreen.routeName;
   static const String rooms = RoomsScreen.routeName;
   static const String addRoom = AddRoomScreen.routeName;
+  static const String automate = AutomateScreen.routeName;
 }

@@ -24,6 +24,12 @@ class _MenuState extends State<Menu> {
               onTap: () => Navigator.pushReplacementNamed(
                   context, Routes.control,
                   arguments: {"user": widget.user})),
+          _createDrawerItem(
+              icon: Icons.timer,
+              text: 'Automatisation',
+              onTap: () => Navigator.pushReplacementNamed(
+                  context, Routes.automate,
+                  arguments: {"user": widget.user})),
           widget.user.isAdmin
               ? _createDrawerItem(
                   icon: Icons.group,
